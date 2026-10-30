@@ -13,7 +13,6 @@
             --accent-green: #22c55e;
             --accent-orange: #f97316;
             --accent-red: #ef4444;
-            --accent-dark: #475569;
             --text-main: #f8fafc;
             --text-muted: #94a3b8;
         }
@@ -23,9 +22,9 @@
 
         header { background: #0f172a; padding: 12px 16px; border-bottom: 1px solid var(--panel-border); display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 100; }
         .logo-title { font-weight: 800; font-size: 1.1rem; color: var(--accent-blue); display: flex; align-items: center; gap: 8px; }
-        .week-selector { display: flex; align-items: center; background: var(--panel-bg); border: 1px solid var(--panel-border); border-radius: 8px; padding: 2px 6px; }
-        .week-btn { background: none; border: none; color: var(--text-main); font-size: 1.2rem; padding: 4px 8px; cursor: pointer; }
-        .week-label { font-weight: 600; font-size: 0.9rem; padding: 0 8px; color: var(--accent-blue); }
+        
+        .header-controls { display: flex; gap: 8px; align-items: center; }
+        .week-select-dropdown { background: var(--panel-bg); color: var(--accent-blue); border: 1px solid var(--panel-border); border-radius: 8px; padding: 6px 10px; font-weight: 600; font-size: 0.85rem; cursor: pointer; }
 
         nav { background: #0f172a; display: flex; border-bottom: 1px solid var(--panel-border); position: sticky; top: 57px; z-index: 99; }
         .nav-tab { flex: 1; padding: 12px 8px; text-align: center; font-size: 0.85rem; font-weight: 600; color: var(--text-muted); cursor: pointer; border-bottom: 3px solid transparent; display: flex; flex-direction: column; align-items: center; gap: 4px; }
@@ -36,14 +35,42 @@
         .tab-content.active { display: block; }
 
         /* Module 1: Climat & Notes */
-        .class-bar { display: flex; gap: 10px; margin-bottom: 16px; overflow-x: auto; padding-bottom: 4px; }
-        .class-chip { background: var(--panel-bg); border: 1px solid var(--panel-border); padding: 8px 16px; border-radius: 20px; font-size: 0.85rem; font-weight: 600; cursor: pointer; white-space: nowrap; }
+        .class-bar { display: flex; gap: 10px; margin-bottom: 12px; overflow-x: auto; padding-bottom: 4px; }
+        .class-chip { background: var(--panel-bg); border: 1px solid var(--panel-border); padding: 8px 16px; border-radius: 20px; font-size: 0.85rem; font-weight: 600; cursor: pointer; white-space: nowrap; display: flex; flex-direction: column; align-items: center; }
         .class-chip.active { background: var(--accent-blue); color: #000; border-color: var(--accent-blue); }
+        .class-chip span { font-size: 0.7rem; opacity: 0.8; }
+        .class-chip.active span { color: #000; }
+
+        .toolbar-terrain { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; background: var(--panel-bg); padding: 8px 12px; border-radius: 8px; border: 1px solid var(--panel-border); }
+        .view-mode-toggle { display: flex; gap: 4px; }
+        .view-btn { background: #0f172a; border: 1px solid var(--panel-border); color: var(--text-muted); padding: 6px 10px; border-radius: 6px; font-size: 0.75rem; cursor: pointer; font-weight: 600; }
+        .view-btn.active { background: var(--accent-blue); color: black; border-color: var(--accent-blue); }
 
         .student-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 12px; }
-        .student-card { background: var(--panel-bg); border: 1px solid var(--panel-border); border-radius: 12px; padding: 12px; display: flex; flex-direction: column; gap: 10px; }
+        .student-card { background: var(--panel-bg); border: 1px solid var(--panel-border); border-radius: 12px; padding: 12px; display: flex; flex-direction: column; gap: 10px; position: relative; transition: border-color 0.2s; }
+        
+        /* Indicateurs de couleur des groupes */
+        .student-card.group-red { border-left: 6px solid #ef4444; }
+        .student-card.group-blue { border-left: 6px solid #38bdf8; }
+        .student-card.group-green { border-left: 6px solid #22c55e; }
+        .student-card.group-yellow { border-left: 6px solid #eab308; }
+        .student-card.group-purple { border-left: 6px solid #a855f7; }
+
         .student-header { display: flex; justify-content: space-between; align-items: center; }
-        .student-name { font-weight: 700; font-size: 1rem; }
+        .student-name { font-weight: 700; font-size: 1rem; display: flex; align-items: center; gap: 6px; }
+        
+        .color-badge { width: 12px; height: 12px; border-radius: 50%; display: inline-block; }
+        .bg-red { background: #ef4444; }
+        .bg-blue { background: #38bdf8; }
+        .bg-green { background: #22c55e; }
+        .bg-yellow { background: #eab308; }
+        .bg-purple { background: #a855f7; }
+        .bg-none { background: #334155; }
+
+        .group-selector-row { display: none; gap: 4px; justify-content: space-between; background: #0f172a; padding: 4px; border-radius: 6px; }
+        .student-card.show-group-mode .group-selector-row { display: flex; }
+        .group-dot-btn { width: 22px; height: 22px; border-radius: 50%; border: none; cursor: pointer; }
+
         .student-score { font-size: 1.2rem; font-weight: 900; padding: 4px 10px; border-radius: 8px; }
         .score-5 { background: #22c55e33; color: #4ade80; border: 1px solid #22c55e; }
         .score-4 { background: #38bdf833; color: #38bdf8; border: 1px solid #38bdf8; }
@@ -93,7 +120,7 @@
         input[type="text"], textarea, select { background: #0f172a; border: 1px solid var(--panel-border); color: white; padding: 10px; border-radius: 8px; font-size: 0.9rem; width: 100%; }
         textarea { resize: vertical; min-height: 80px; }
 
-        /* Module 3: Suivi Hebdo */
+        /* Module 3 & 4 */
         .summary-table-container { background: var(--panel-bg); border: 1px solid var(--panel-border); border-radius: 12px; overflow-x: auto; margin-bottom: 20px; }
         table { width: 100%; border-collapse: collapse; text-align: left; font-size: 0.85rem; }
         th, td { padding: 10px 14px; border-bottom: 1px solid var(--panel-border); }
@@ -108,12 +135,10 @@
         .timeline-item { background: var(--panel-bg); border-left: 4px solid var(--accent-blue); border-radius: 0 8px 8px 0; padding: 12px; display: flex; flex-direction: column; gap: 4px; }
         .timeline-header { display: flex; justify-content: space-between; font-weight: bold; font-size: 0.85rem; color: var(--text-muted); }
 
-        /* Listes de gestion d'élèves */
         .item-list { display: flex; flex-direction: column; gap: 8px; margin-top: 8px; }
         .item-row { display: flex; justify-content: space-between; align-items: center; background: #0f172a; padding: 8px 12px; border-radius: 6px; border: 1px solid var(--panel-border); }
         .btn-del { background: var(--accent-red); color: white; border: none; padding: 4px 8px; border-radius: 4px; font-size: 0.75rem; cursor: pointer; font-weight: bold; }
 
-        /* Common UI Elements */
         .btn-main { background: var(--accent-blue); color: black; border: none; padding: 12px 16px; border-radius: 8px; font-weight: bold; cursor: pointer; text-align: center; width: 100%; display: flex; justify-content: center; align-items: center; gap: 8px; }
         .btn-secondary { background: #334155; color: white; border: none; padding: 10px 14px; border-radius: 8px; font-weight: 600; cursor: pointer; }
         .actions-row { display: flex; gap: 10px; margin-top: 10px; }
@@ -128,10 +153,10 @@
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
             EPS Pilot
         </div>
-        <div class="week-selector">
-            <button class="week-btn" onclick="changeWeek(-1)">❮</button>
-            <span class="week-label" id="current-week-display">Semaine 1</span>
-            <button class="week-btn" onclick="changeWeek(1)">❯</button>
+        <div class="header-controls">
+            <select id="week-dropdown" class="week-select-dropdown" onchange="changeWeekDropdown(this.value)">
+                <!-- Généré par JS de 1 à 20 -->
+            </select>
         </div>
     </header>
 
@@ -158,6 +183,15 @@
         <!-- ONGLET 1: CLIMAT ET NOTES -->
         <div id="tab-climat" class="tab-content active">
             <div class="class-bar" id="class-bar"></div>
+            
+            <div class="toolbar-terrain">
+                <span id="current-sport-label" style="font-size: 0.85rem; font-weight: bold; color: var(--accent-blue);">Activité : Non définie</span>
+                <div class="view-mode-toggle">
+                    <button class="view-btn active" id="btn-mode-standard" onclick="setViewGroupMode(false)">Vue Notes / Bilan</button>
+                    <button class="view-btn" id="btn-mode-groups" onclick="setViewGroupMode(true)">🎨 Groupes Couleurs</button>
+                </div>
+            </div>
+
             <div class="student-grid" id="student-grid"></div>
 
             <div style="margin-top:20px;">
@@ -184,15 +218,15 @@
             <div class="breadcrumbs">
                 <div class="crumb-card">
                     <div class="crumb-title">Séquence Précédente</div>
-                    <div class="crumb-name">Course d'Orientation</div>
+                    <div class="crumb-name">Cycle Précédent</div>
                 </div>
                 <div class="crumb-card active">
                     <div class="crumb-title">Séquence Actuelle</div>
-                    <div class="crumb-name" id="seq-current-name">Badminton / Sports Co</div>
+                    <div class="crumb-name" id="seq-current-name">Activité en cours</div>
                 </div>
                 <div class="crumb-card">
                     <div class="crumb-title">Séquence Suivante</div>
-                    <div class="crumb-name">Acrosport / Athlétisme</div>
+                    <div class="crumb-name">Cycle Suivant</div>
                 </div>
             </div>
 
@@ -250,24 +284,31 @@
 
         <!-- ONGLET 4: CONFIGURATION & GESTION DES ÉLÈVES -->
         <div id="tab-settings" class="tab-content">
-            <!-- GESTION DE LISTE DE CLASSE -->
             <div class="feedback-form">
-                <h3 style="font-size: 1rem; color: var(--accent-blue);">Gestion des Élèves & Classes</h3>
+                <h3 style="font-size: 1rem; color: var(--accent-blue);">Gestion des Classes & Activités</h3>
                 
                 <div class="form-group">
                     <label class="form-label">Ajouter une nouvelle classe :</label>
                     <div style="display:flex; gap:8px;">
-                        <input type="text" id="new-class-input" placeholder="Ex: 3e SEGPA, 6e2...">
+                        <input type="text" id="new-class-input" placeholder="Ex: 3e SEGPA, 4e3...">
                         <button class="btn-secondary" onclick="addNewClass()">Créer</button>
                     </div>
                 </div>
 
                 <div class="form-group" style="margin-top:10px;">
-                    <label class="form-label">Sélectionner la classe à modifier :</label>
+                    <label class="form-label">Sélectionner la classe à configurer :</label>
                     <select id="manage-class-select" onchange="renderStudentManager()"></select>
                 </div>
 
                 <div class="form-group">
+                    <label class="form-label">Sport / Activité de la séquence :</label>
+                    <div style="display:flex; gap:8px;">
+                        <input type="text" id="class-sport-input" placeholder="Ex: Badminton, Rugby, Escalade...">
+                        <button class="btn-secondary" onclick="saveClassSport()">Enregistrer Sport</button>
+                    </div>
+                </div>
+
+                <div class="form-group" style="margin-top:10px;">
                     <label class="form-label">Ajouter un élève dans cette classe :</label>
                     <div style="display:flex; gap:8px;">
                         <input type="text" id="new-student-input" placeholder="Nom / Prénom de l'élève">
@@ -281,7 +322,6 @@
                 </div>
             </div>
 
-            <!-- EXPORT / SAUVEGARDE -->
             <div class="feedback-form">
                 <h3 style="font-size: 1rem; color: var(--accent-blue);">Sauvegarde & Exportation</h3>
                 <div class="actions-row">
@@ -295,7 +335,7 @@
         </div>
     </main>
 
-    <!-- MODALE ACTION INCIDENT -->
+    <!-- MODALE INCIDENTS -->
     <div id="incident-modal" class="modal">
         <div class="modal-content">
             <div class="modal-title" id="incident-student-name">Signaler un Incident</div>
@@ -326,20 +366,23 @@
     <script>
         let currentWeek = 1;
         let currentClass = "3e SEGPA";
+        let isGroupModeActive = false;
         let activeStudentForIncident = null;
         let selectedIncidentTypes = [];
         let feedbackSelection = { climat: '', moteur: '' };
 
         let appData = {
             classes: ["3e SEGPA", "4e3"],
+            classSports: { "3e SEGPA": "Badminton", "4e3": "Rugby" },
             students: {
                 "3e SEGPA": [
-                    { id: 1, name: "Kévin M." },
-                    { id: 2, name: "Lucas D." },
-                    { id: 3, name: "Yanis B." },
-                    { id: 4, name: "Inès T." },
-                    { id: 5, name: "Mathieu S." }
-                ]
+                    { id: 1, name: "Kévin M.", group: "none" },
+                    { id: 2, name: "Lucas D.", group: "none" },
+                    { id: 3, name: "Yanis B.", group: "none" },
+                    { id: 4, name: "Inès T.", group: "none" },
+                    { id: 5, name: "Mathieu S.", group: "none" }
+                ],
+                "4e3": []
             },
             weeklyRecords: {},
             sequenceLogs: {}
@@ -347,6 +390,7 @@
 
         window.onload = function() {
             loadFromLocalStorage();
+            initWeekDropdown();
             renderClasses();
             renderWeek();
             renderStudentManager();
@@ -356,13 +400,27 @@
         function setupServiceWorker() {
             if ('serviceWorker' in navigator) {
                 const swCode = `
-                    const CACHE = 'eps-pilot-v2';
+                    const CACHE = 'eps-pilot-v3';
                     self.addEventListener('install', e => e.waitUntil(caches.open(CACHE).then(c => c.addAll(['/']))));
                     self.addEventListener('fetch', e => e.respondWith(caches.match(e.request).then(r => r || fetch(e.request))));
                 `;
                 const blob = new Blob([swCode], { type: 'application/javascript' });
                 navigator.serviceWorker.register(URL.createObjectURL(blob)).catch(()=>{});
             }
+        }
+
+        function initWeekDropdown() {
+            const select = document.getElementById('week-dropdown');
+            let html = '';
+            for(let i = 1; i <= 36; i++) {
+                html += `<option value="${i}" ${i === currentWeek ? 'selected' : ''}>Semaine ${i}</option>`;
+            }
+            select.innerHTML = html;
+        }
+
+        function changeWeekDropdown(val) {
+            currentWeek = parseInt(val);
+            renderWeek();
         }
 
         function switchTab(tabId) {
@@ -374,28 +432,42 @@
 
             if(tabId === 'suivi') renderSuivi();
             if(tabId === 'settings') renderStudentManager();
-        }
-
-        function changeWeek(delta) {
-            currentWeek = Math.max(1, currentWeek + delta);
-            renderWeek();
+            if(tabId === 'sequence') {
+                document.getElementById('seq-current-name').innerText = appData.classSports[currentClass] || "Activité EPS";
+            }
         }
 
         function renderWeek() {
-            document.getElementById('current-week-display').innerText = `Semaine ${currentWeek}`;
+            document.getElementById('week-dropdown').value = currentWeek;
             renderStudents();
         }
 
         function renderClasses() {
             const bar = document.getElementById('class-bar');
-            bar.innerHTML = appData.classes.map(c => `
-                <div class="class-chip ${c === currentClass ? 'active' : ''}" onclick="selectClass('${c}')">${c}</div>
-            `).join('');
+            bar.innerHTML = appData.classes.map(c => {
+                const sport = appData.classSports[c] || "EPS";
+                return `
+                    <div class="class-chip ${c === currentClass ? 'active' : ''}" onclick="selectClass('${c}')">
+                        ${c}
+                        <span>${sport}</span>
+                    </div>
+                `;
+            }).join('');
+
+            const sportLabel = appData.classSports[currentClass] || "Non défini";
+            document.getElementById('current-sport-label').innerText = `Activité : ${sportLabel}`;
         }
 
         function selectClass(className) {
             currentClass = className;
             renderClasses();
+            renderStudents();
+        }
+
+        function setViewGroupMode(status) {
+            isGroupModeActive = status;
+            document.getElementById('btn-mode-standard').classList.toggle('active', !status);
+            document.getElementById('btn-mode-groups').classList.toggle('active', status);
             renderStudents();
         }
 
@@ -433,17 +505,43 @@
             grid.innerHTML = students.map(s => {
                 const data = getStudentWeekData(s.id);
                 const score = calculateScore(data);
+                const group = s.group || 'none';
                 
                 let scoreClass = 'score-5';
                 if(score === 4) scoreClass = 'score-4';
                 if(score === 3) scoreClass = 'score-3';
                 if(score < 3) scoreClass = 'score-low';
 
+                let groupClass = `group-${group}`;
+                let modeClass = isGroupModeActive ? 'show-group-mode' : '';
+
+                let dotRed = group === 'red' ? 'border:2px solid white;' : '';
+                let dotBlue = group === 'blue' ? 'border:2px solid white;' : '';
+                let dotGreen = group === 'green' ? 'border:2px solid white;' : '';
+                let dotYellow = group === 'yellow' ? 'border:2px solid white;' : '';
+                let dotPurple = group === 'purple' ? 'border:2px solid white;' : '';
+                let dotNone = group === 'none' ? 'border:2px solid white;' : '';
+
                 return `
-                <div class="student-card">
+                <div class="student-card ${groupClass} ${modeClass}">
                     <div class="student-header">
-                        <span class="student-name">${s.name}</span>
+                        <span class="student-name">
+                            <span class="color-badge bg-${group}"></span>
+                            ${s.name}
+                        </span>
                         <span class="student-score ${scoreClass}">${score}/5</span>
+                    </div>
+
+                    <div class="group-selector-row">
+                        <span style="font-size:0.7rem; color:var(--text-muted); font-weight:bold;">GROUPE :</span>
+                        <div style="display:flex; gap:6px;">
+                            <button class="group-dot-btn bg-red" style="${dotRed}" onclick="setStudentGroup(${s.id}, 'red')"></button>
+                            <button class="group-dot-btn bg-blue" style="${dotBlue}" onclick="setStudentGroup(${s.id}, 'blue')"></button>
+                            <button class="group-dot-btn bg-green" style="${dotGreen}" onclick="setStudentGroup(${s.id}, 'green')"></button>
+                            <button class="group-dot-btn bg-yellow" style="${dotYellow}" onclick="setStudentGroup(${s.id}, 'yellow')"></button>
+                            <button class="group-dot-btn bg-purple" style="${dotPurple}" onclick="setStudentGroup(${s.id}, 'purple')"></button>
+                            <button class="group-dot-btn bg-none" style="${dotNone}" onclick="setStudentGroup(${s.id}, 'none')">✕</button>
+                        </div>
                     </div>
 
                     <div class="behavior-counter">
@@ -474,6 +572,16 @@
             }).join('');
         }
 
+        function setStudentGroup(studentId, groupColor) {
+            const students = appData.students[currentClass] || [];
+            const st = students.find(s => s.id === studentId);
+            if(st) {
+                st.group = groupColor;
+                saveToLocalStorage();
+                renderStudents();
+            }
+        }
+
         function updateBehavior(studentId, delta) {
             const data = getStudentWeekData(studentId);
             data.behaviorPoints = Math.max(0, Math.min(3, data.behaviorPoints + delta));
@@ -495,12 +603,14 @@
             renderStudents();
         }
 
-        /* --- GESTION DES ÉLÈVES DEPUIS L'ONGLET DONNÉES --- */
+        /* --- GESTION DES CLASSES ET ACTIVITÉS --- */
         function renderStudentManager() {
             const select = document.getElementById('manage-class-select');
             select.innerHTML = appData.classes.map(c => `<option value="${c}" ${c === currentClass ? 'selected' : ''}>${c}</option>`).join('');
             
             const selectedClass = select.value || currentClass;
+            document.getElementById('class-sport-input').value = appData.classSports[selectedClass] || '';
+
             const listContainer = document.getElementById('manager-student-list');
             const students = appData.students[selectedClass] || [];
 
@@ -517,12 +627,26 @@
             `).join('');
         }
 
+        function saveClassSport() {
+            const select = document.getElementById('manage-class-select');
+            const selectedClass = select.value;
+            const sportInput = document.getElementById('class-sport-input').value.trim();
+            
+            if(selectedClass) {
+                appData.classSports[selectedClass] = sportInput || "EPS";
+                saveToLocalStorage();
+                renderClasses();
+                alert("Activité enregistrée pour la classe " + selectedClass);
+            }
+        }
+
         function addNewClass() {
             const input = document.getElementById('new-class-input');
             const className = input.value.trim();
             if(className && !appData.classes.includes(className)) {
                 appData.classes.push(className);
                 appData.students[className] = [];
+                appData.classSports[className] = "EPS";
                 input.value = '';
                 saveToLocalStorage();
                 renderClasses();
@@ -539,7 +663,7 @@
             if(name && selectedClass) {
                 if(!appData.students[selectedClass]) appData.students[selectedClass] = [];
                 const newId = Date.now();
-                appData.students[selectedClass].push({ id: newId, name: name });
+                appData.students[selectedClass].push({ id: newId, name: name, group: 'none' });
                 input.value = '';
                 saveToLocalStorage();
                 renderStudentManager();
@@ -609,7 +733,8 @@
         /* --- RAPPORT PRONOTE --- */
         function generatePronoteReport() {
             const students = appData.students[currentClass] || [];
-            let report = `=== BILAN EPS - ${currentClass} (Semaine ${currentWeek}) ===\n\n`;
+            const sport = appData.classSports[currentClass] || "EPS";
+            let report = `=== BILAN ${sport} - ${currentClass} (Semaine ${currentWeek}) ===\n\n`;
 
             let incidentsCount = 0;
             let materialCount = 0;
@@ -752,19 +877,21 @@
         function loadDemoData() {
             appData = {
                 classes: ["3e SEGPA", "4e3"],
+                classSports: { "3e SEGPA": "Badminton", "4e3": "Rugby" },
                 students: {
                     "3e SEGPA": [
-                        { id: 1, name: "Kévin M." },
-                        { id: 2, name: "Lucas D." },
-                        { id: 3, name: "Yanis B." },
-                        { id: 4, name: "Inès T." },
-                        { id: 5, name: "Mathieu S." }
+                        { id: 1, name: "Kévin M.", group: "red" },
+                        { id: 2, name: "Lucas D.", group: "blue" },
+                        { id: 3, name: "Yanis B.", group: "red" },
+                        { id: 4, name: "Inès T.", group: "blue" },
+                        { id: 5, name: "Mathieu S.", group: "green" }
                     ]
                 },
                 weeklyRecords: {},
                 sequenceLogs: {}
             };
             saveToLocalStorage();
+            initWeekDropdown();
             renderClasses();
             renderWeek();
             renderStudentManager();
@@ -779,15 +906,16 @@
         }
 
         function exportCSV() {
-            let csv = "Classe,Semaine,Elève,Note,OubliTenue,Incident\n";
+            let csv = "Classe,Sport,Semaine,Elève,Note,OubliTenue,Incident\n";
             const students = appData.students[currentClass] || [];
+            const sport = appData.classSports[currentClass] || "EPS";
 
             Object.keys(appData.weeklyRecords).forEach(w => {
                 students.forEach(s => {
                     const data = appData.weeklyRecords[w][s.id];
                     if (data) {
                         const score = calculateScore(data);
-                        csv += `"${currentClass}",${w},"${s.name}",${score},${data.noKit || data.noShoes},${data.incident ? 'Oui' : 'Non'}\n`;
+                        csv += `"${currentClass}","${sport}",${w},"${s.name}",${score},${data.noKit || data.noShoes},${data.incident ? 'Oui' : 'Non'}\n`;
                     }
                 });
             });
