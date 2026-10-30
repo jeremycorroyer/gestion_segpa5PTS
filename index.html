@@ -1,0 +1,748 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EPS Pilot - Gestion Terrain & Suivi</title>
+    <style>
+        :root {
+            --bg-dark: #121824;
+            --panel-bg: #1e293b;
+            --panel-border: #334155;
+            --accent-blue: #38bdf8;
+            --accent-green: #22c55e;
+            --accent-orange: #f97316;
+            --accent-red: #ef4444;
+            --accent-dark: #475569;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
+        body { background-color: var(--bg-dark); color: var(--text-main); display: flex; flex-direction: column; min-height: 100vh; overflow-x: hidden; }
+
+        header { background: #0f172a; padding: 12px 16px; border-bottom: 1px solid var(--panel-border); display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 100; }
+        .logo-title { font-weight: 800; font-size: 1.1rem; color: var(--accent-blue); display: flex; align-items: center; gap: 8px; }
+        .week-selector { display: flex; align-items: center; background: var(--panel-bg); border: 1px solid var(--panel-border); border-radius: 8px; padding: 2px 6px; }
+        .week-btn { background: none; border: none; color: var(--text-main); font-size: 1.2rem; padding: 4px 8px; cursor: pointer; }
+        .week-label { font-weight: 600; font-size: 0.9rem; padding: 0 8px; color: var(--accent-blue); }
+
+        nav { background: #0f172a; display: flex; border-bottom: 1px solid var(--panel-border); position: sticky; top: 57px; z-index: 99; }
+        .nav-tab { flex: 1; padding: 12px 8px; text-align: center; font-size: 0.85rem; font-weight: 600; color: var(--text-muted); cursor: pointer; border-bottom: 3px solid transparent; display: flex; flex-direction: column; align-items: center; gap: 4px; }
+        .nav-tab.active { color: var(--accent-blue); border-bottom-color: var(--accent-blue); background: #1e293b40; }
+
+        main { flex: 1; padding: 16px; max-width: 1200px; margin: 0 auto; width: 100%; }
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
+
+        /* Module 1: Climat & Notes */
+        .class-bar { display: flex; gap: 10px; margin-bottom: 16px; overflow-x: auto; padding-bottom: 4px; }
+        .class-chip { background: var(--panel-bg); border: 1px solid var(--panel-border); padding: 8px 16px; border-radius: 20px; font-size: 0.85rem; font-weight: 600; cursor: pointer; white-space: nowrap; }
+        .class-chip.active { background: var(--accent-blue); color: #000; border-color: var(--accent-blue); }
+
+        .student-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 12px; }
+        .student-card { background: var(--panel-bg); border: 1px solid var(--panel-border); border-radius: 12px; padding: 12px; display: flex; flex-direction: column; gap: 10px; }
+        .student-header { display: flex; justify-content: space-between; align-items: center; }
+        .student-name { font-weight: 700; font-size: 1rem; }
+        .student-score { font-size: 1.2rem; font-weight: 900; padding: 4px 10px; border-radius: 8px; }
+        .score-5 { background: #22c55e33; color: #4ade80; border: 1px solid #22c55e; }
+        .score-4 { background: #38bdf833; color: #38bdf8; border: 1px solid #38bdf8; }
+        .score-3 { background: #f9731633; color: #fb923c; border: 1px solid #f97316; }
+        .score-low { background: #ef444433; color: #f87171; border: 1px solid #ef4444; }
+
+        .behavior-counter { display: flex; align-items: center; justify-content: space-between; background: #0f172a; padding: 6px 12px; border-radius: 8px; }
+        .counter-btn { width: 32px; height: 32px; border-radius: 6px; border: none; font-weight: bold; font-size: 1.2rem; cursor: pointer; display: flex; align-items: center; justify-content: center; }
+        .btn-minus { background: var(--accent-red); color: white; }
+        .btn-plus { background: var(--accent-green); color: white; }
+        .counter-dots { display: flex; gap: 6px; }
+        .dot { width: 12px; height: 12px; border-radius: 50%; background: #334155; }
+        .dot.active-3 { background: var(--accent-green); box-shadow: 0 0 6px var(--accent-green); }
+        .dot.active-2 { background: var(--accent-orange); box-shadow: 0 0 6px var(--accent-orange); }
+        .dot.active-1 { background: var(--accent-red); box-shadow: 0 0 6px var(--accent-red); }
+
+        .toggles-row { display: flex; gap: 6px; }
+        .toggle-btn { flex: 1; padding: 6px; border-radius: 6px; border: 1px solid var(--panel-border); background: #0f172a; color: var(--text-muted); font-size: 0.75rem; text-align: center; cursor: pointer; font-weight: 600; }
+        .toggle-btn.active { background: #ef444422; border-color: var(--accent-red); color: #f87171; }
+
+        .incident-btn { background: #334155; border: none; color: white; padding: 6px 10px; border-radius: 6px; font-size: 0.75rem; cursor: pointer; text-align: center; font-weight: 600; width: 100%; display: flex; align-items: center; justify-content: center; gap: 6px; }
+        .incident-btn.has-incident { background: var(--accent-red); }
+
+        /* Modale Incident */
+        .modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.8); z-index: 200; justify-content: center; align-items: center; padding: 16px; }
+        .modal.active { display: flex; }
+        .modal-content { background: var(--panel-bg); border: 1px solid var(--panel-border); border-radius: 12px; max-width: 500px; width: 100%; padding: 20px; display: flex; flex-direction: column; gap: 12px; }
+        .modal-title { font-size: 1.1rem; font-weight: bold; color: var(--accent-red); }
+        .chip-group { display: flex; flex-wrap: wrap; gap: 8px; }
+        .chip-opt { background: #0f172a; border: 1px solid var(--panel-border); padding: 8px 12px; border-radius: 6px; font-size: 0.85rem; cursor: pointer; }
+        .chip-opt.selected { background: var(--accent-red); color: white; border-color: var(--accent-red); }
+
+        /* Module 2: Dashboard Séquence */
+        .breadcrumbs { display: flex; gap: 10px; margin-bottom: 16px; overflow-x: auto; }
+        .crumb-card { flex: 1; min-width: 200px; background: var(--panel-bg); border: 1px solid var(--panel-border); padding: 12px; border-radius: 10px; opacity: 0.7; }
+        .crumb-card.active { border-color: var(--accent-blue); opacity: 1; background: #1e293b; box-shadow: 0 0 10px rgba(56, 189, 248, 0.2); }
+        .crumb-title { font-size: 0.75rem; text-transform: uppercase; color: var(--text-muted); font-weight: bold; }
+        .crumb-name { font-size: 0.95rem; font-weight: bold; margin-top: 4px; color: var(--text-main); }
+
+        .feedback-form { background: var(--panel-bg); border: 1px solid var(--panel-border); border-radius: 12px; padding: 16px; display: flex; flex-direction: column; gap: 16px; }
+        .form-group { display: flex; flex-direction: column; gap: 6px; }
+        .form-label { font-size: 0.85rem; font-weight: bold; color: var(--accent-blue); }
+        .btn-selector { display: flex; gap: 8px; }
+        .btn-opt { flex: 1; padding: 10px; background: #0f172a; border: 1px solid var(--panel-border); border-radius: 8px; color: white; text-align: center; font-size: 0.85rem; cursor: pointer; }
+        .btn-opt.selected { background: var(--accent-blue); color: black; font-weight: bold; }
+
+        textarea { background: #0f172a; border: 1px solid var(--panel-border); color: white; padding: 10px; border-radius: 8px; resize: vertical; min-height: 80px; font-size: 0.9rem; }
+
+        /* Module 3: Suivi Hebdo */
+        .summary-table-container { background: var(--panel-bg); border: 1px solid var(--panel-border); border-radius: 12px; overflow-x: auto; margin-bottom: 20px; }
+        table { width: 100%; border-collapse: collapse; text-align: left; font-size: 0.85rem; }
+        th, td { padding: 10px 14px; border-bottom: 1px solid var(--panel-border); }
+        th { background: #0f172a; color: var(--accent-blue); font-weight: 600; }
+        tr:last-child td { border-bottom: none; }
+        .badge { padding: 2px 6px; border-radius: 4px; font-weight: bold; font-size: 0.75rem; }
+        .badge-danger { background: #ef444433; color: #f87171; }
+        .badge-warning { background: #f9731633; color: #fb923c; }
+        .badge-success { background: #22c55e33; color: #4ade80; }
+
+        .timeline { display: flex; flex-direction: column; gap: 12px; }
+        .timeline-item { background: var(--panel-bg); border-left: 4px solid var(--accent-blue); border-radius: 0 8px 8px 0; padding: 12px; display: flex; flex-direction: column; gap: 4px; }
+        .timeline-header { display: flex; justify-content: space-between; font-weight: bold; font-size: 0.85rem; color: var(--text-muted); }
+
+        /* Common UI Elements */
+        .btn-main { background: var(--accent-blue); color: black; border: none; padding: 12px 16px; border-radius: 8px; font-weight: bold; cursor: pointer; text-align: center; width: 100%; display: flex; justify-content: center; align-items: center; gap: 8px; }
+        .btn-secondary { background: #334155; color: white; border: none; padding: 10px 14px; border-radius: 8px; font-weight: 600; cursor: pointer; }
+        .actions-row { display: flex; gap: 10px; margin-top: 10px; }
+
+        .report-box { background: #0f172a; border: 1px dashed var(--panel-border); padding: 12px; border-radius: 8px; font-family: monospace; font-size: 0.8rem; white-space: pre-wrap; color: #cbd5e1; max-height: 200px; overflow-y: auto; }
+
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="logo-title">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+            EPS Pilot
+        </div>
+        <div class="week-selector">
+            <button class="week-btn" onclick="changeWeek(-1)">❮</button>
+            <span class="week-label" id="current-week-display">Semaine 1</span>
+            <button class="week-btn" onclick="changeWeek(1)">❯</button>
+        </div>
+    </header>
+
+    <nav>
+        <div class="nav-tab active" onclick="switchTab('climat')">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+            Terrain & Notes
+        </div>
+        <div class="nav-tab" onclick="switchTab('sequence')">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+            Régulation Séquence
+        </div>
+        <div class="nav-tab" onclick="switchTab('suivi')">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+            Suivi Hebdo
+        </div>
+        <div class="nav-tab" onclick="switchTab('settings')">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+            Données
+        </div>
+    </nav>
+
+    <main>
+        <!-- ONGLET 1: CLIMAT ET NOTES (SEGPA) -->
+        <div id="tab-climat" class="tab-content active">
+            <div class="class-bar" id="class-bar">
+                <!-- Classes injectées par JS -->
+            </div>
+
+            <div class="student-grid" id="student-grid">
+                <!-- Cartes élèves injectées par JS -->
+            </div>
+
+            <div style="margin-top:20px;">
+                <button class="btn-main" onclick="generatePronoteReport()">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+                    Générer Synthèse Pronote / Incident
+                </button>
+            </div>
+
+            <div id="report-modal" class="modal">
+                <div class="modal-content">
+                    <div class="modal-title">Rapport d'Incident & Mots Carnet</div>
+                    <div class="report-box" id="report-text"></div>
+                    <div class="actions-row">
+                        <button class="btn-main" onclick="copyReport()">Copier le texte</button>
+                        <button class="btn-secondary" onclick="closeReportModal()">Fermer</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ONGLET 2: DSD SÉQUENCE & FEEDBACK -->
+        <div id="tab-sequence" class="tab-content">
+            <div class="breadcrumbs">
+                <div class="crumb-card">
+                    <div class="crumb-title">Séquence Précédente</div>
+                    <div class="crumb-name">Course d'Orientation</div>
+                </div>
+                <div class="crumb-card active">
+                    <div class="crumb-title">Séquence Actuelle</div>
+                    <div class="crumb-name" id="seq-current-name">Badminton / Sports Co</div>
+                </div>
+                <div class="crumb-card">
+                    <div class="crumb-title">Séquence Suivante</div>
+                    <div class="crumb-name">Acrosport / Athlétisme</div>
+                </div>
+            </div>
+
+            <div class="feedback-form">
+                <h3 style="font-size: 1rem; color: var(--accent-blue);">Bilan Flash Fin de Cours (30s)</h3>
+                
+                <div class="form-group">
+                    <label class="form-label">Climat Global du Cours</label>
+                    <div class="btn-selector" id="climat-selector">
+                        <div class="btn-opt" onclick="selectOpt(this, 'climat', '🟢 Sérénité / Engagement')">🟢 Sérénité</div>
+                        <div class="btn-opt" onclick="selectOpt(this, 'climat', '🟠 Tensions / Rappels')">🟠 Tensions</div>
+                        <div class="btn-opt" onclick="selectOpt(this, 'climat', '🔴 Difficile / Conflits')">🔴 Perturbé</div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Temps de Pratique Moteur Effectif</label>
+                    <div class="btn-selector" id="moteur-selector">
+                        <div class="btn-opt" onclick="selectOpt(this, 'moteur', 'Faible (<40%)')">Faible</div>
+                        <div class="btn-opt" onclick="selectOpt(this, 'moteur', 'Moyen (50-60%)')">Moyen</div>
+                        <div class="btn-opt" onclick="selectOpt(this, 'moteur', 'Élevé (>70%)')">Élevé</div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Ajustements Clés pour le Cours Prochain</label>
+                    <textarea id="feedback-text" placeholder="Ex: Relancer l'échauffement sur l'atelier B, recadrer X et Y dès l'entrée au gymnase..."></textarea>
+                </div>
+
+                <button class="btn-main" onclick="saveSequenceFeedback()">Enregistrer le Bilan de Séance</button>
+            </div>
+        </div>
+
+        <!-- ONGLET 3: SUIVI HEBDO -->
+        <div id="tab-suivi" class="tab-content">
+            <h3 style="font-size: 1rem; color: var(--accent-blue); margin-bottom: 12px;">Synthèse Cumulée du Cycle</h3>
+            <div class="summary-table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Élève</th>
+                            <th>Moy. Note /5</th>
+                            <th>Oublis Tenue</th>
+                            <th>Incidents</th>
+                            <th>Statut</th>
+                        </tr>
+                    </thead>
+                    <tbody id="summary-table-body">
+                        <!-- Rempli par JS -->
+                    </tbody>
+                </table>
+            </div>
+
+            <h3 style="font-size: 1rem; color: var(--accent-blue); margin-bottom: 12px;">Historique des Bilans de Séance</h3>
+            <div class="timeline" id="timeline-container">
+                <!-- Rempli par JS -->
+            </div>
+        </div>
+
+        <!-- ONGLET 4: CONFIGURATION & DONNÉES -->
+        <div id="tab-settings" class="tab-content">
+            <div class="feedback-form">
+                <h3 style="font-size: 1rem; color: var(--accent-blue);">Gestion des Données (Local & Offline)</h3>
+                <p style="font-size: 0.85rem; color: var(--text-muted);">
+                    Toutes les données sont stockées sur votre appareil. Aucune connexion internet n'est requise.
+                </p>
+
+                <div class="actions-row">
+                    <button class="btn-secondary" onclick="exportCSV()">Exporter Notes (CSV)</button>
+                    <button class="btn-secondary" onclick="exportJSON()">Sauvegarder la base (JSON)</button>
+                </div>
+
+                <hr style="border-color: var(--panel-border); margin: 8px 0;">
+
+                <button class="btn-main" style="background: var(--accent-orange);" onclick="loadDemoData()">Charger des données de Démonstration (3e SEGPA)</button>
+                <button class="btn-main" style="background: var(--accent-red); margin-top: 8px;" onclick="clearData()">Réinitialiser toutes les données</button>
+            </div>
+        </div>
+    </main>
+
+    <!-- MODALE ACTION INCIDENT -->
+    <div id="incident-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-title" id="incident-student-name">Signaler un Incident</div>
+            
+            <div class="form-group">
+                <label class="form-label">Type d'incident :</label>
+                <div class="chip-group" id="incident-types">
+                    <div class="chip-opt" onclick="toggleIncidentType(this, 'Insolence / Refus')">Insolence / Refus</div>
+                    <div class="chip-opt" onclick="toggleIncidentType(this, 'Altercation / Bousculade')">Altercation</div>
+                    <div class="chip-opt" onclick="toggleIncidentType(this, 'Langage Inapproprié')">Langage Inapproprié</div>
+                    <div class="chip-opt" onclick="toggleIncidentType(this, 'Mise en Danger')">Mise en Danger</div>
+                    <div class="chip-opt" onclick="toggleIncidentType(this, 'Jet de matériel')">Jet de matériel</div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Détail rapide / Observation :</label>
+                <textarea id="incident-comment" placeholder="Contextualisation en quelques mots..."></textarea>
+            </div>
+
+            <div class="actions-row">
+                <button class="btn-main" onclick="saveIncident()">Valider l'incident</button>
+                <button class="btn-secondary" onclick="closeIncidentModal()">Annuler</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // --- ÉTATA DE L'APPLICATION ---
+        let currentWeek = 1;
+        let currentClass = "3e SEGPA";
+        let activeStudentForIncident = null;
+        let selectedIncidentTypes = [];
+        let feedbackSelection = { climat: '', moteur: '' };
+
+        // Base de données locale de structure
+        let appData = {
+            classes: ["3e SEGPA", "4e3", "5e1"],
+            students: {
+                "3e SEGPA": [
+                    { id: 1, name: "Kévin M." },
+                    { id: 2, name: "Lucas D." },
+                    { id: 3, name: "Yanis B." },
+                    { id: 4, name: "Inès T." },
+                    { id: 5, name: "Mathieu S." }
+                ]
+            },
+            // Stockage hebdomadaire: { week: { studentId: { behaviorPoints, noKit, noShoes, noBook, bonus, incident } } }
+            weeklyRecords: {},
+            // Bilans de séances: { week: { className: { climat, moteur, text, date } } }
+            sequenceLogs: {}
+        };
+
+        // --- INITIALISATION ---
+        window.onload = function() {
+            loadFromLocalStorage();
+            renderClasses();
+            renderWeek();
+            setupServiceWorker();
+        };
+
+        function setupServiceWorker() {
+            if ('serviceWorker' in navigator) {
+                const swCode = `
+                    const CACHE = 'eps-pilot-v1';
+                    self.addEventListener('install', e => e.waitUntil(caches.open(CACHE).then(c => c.addAll(['/']))));
+                    self.addEventListener('fetch', e => e.respondWith(caches.match(e.request).then(r => r || fetch(e.request))));
+                `;
+                const blob = new Blob([swCode], { type: 'application/javascript' });
+                navigator.serviceWorker.register(URL.createObjectURL(blob)).catch(()=>{});
+            }
+        }
+
+        // --- NAVIGATION & SEMAINES ---
+        function switchTab(tabId) {
+            document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+            
+            event.currentTarget.classList.add('active');
+            document.getElementById(`tab-${tabId}`).classList.add('active');
+
+            if(tabId === 'suivi') renderSuivi();
+        }
+
+        function changeWeek(delta) {
+            currentWeek = Math.max(1, currentWeek + delta);
+            renderWeek();
+        }
+
+        function renderWeek() {
+            document.getElementById('current-week-display').innerText = `Semaine ${currentWeek}`;
+            renderStudents();
+        }
+
+        // --- RENDER DYNAMIQUE DES ÉLÈVES ---
+        function renderClasses() {
+            const bar = document.getElementById('class-bar');
+            bar.innerHTML = appData.classes.map(c => `
+                <div class="class-chip ${c === currentClass ? 'active' : ''}" onclick="selectClass('${c}')">${c}</div>
+            `).join('');
+        }
+
+        function selectClass(className) {
+            currentClass = className;
+            renderClasses();
+            renderStudents();
+        }
+
+        function getStudentWeekData(studentId) {
+            if (!appData.weeklyRecords[currentWeek]) appData.weeklyRecords[currentWeek] = {};
+            if (!appData.weeklyRecords[currentWeek][studentId]) {
+                appData.weeklyRecords[currentWeek][studentId] = {
+                    behaviorPoints: 3,
+                    noKit: false,
+                    noShoes: false,
+                    noBook: false,
+                    bonusPoints: 0,
+                    incident: null
+                };
+            }
+            return appData.weeklyRecords[currentWeek][studentId];
+        }
+
+        function calculateScore(data) {
+            let base = data.behaviorPoints; // 3, 2, 1, 0
+            if (data.noKit || data.noShoes) base = Math.min(base, 2); 
+            let finalScore = base + data.bonusPoints;
+            return Math.max(0, Math.min(5, finalScore));
+        }
+
+        function renderStudents() {
+            const grid = document.getElementById('student-grid');
+            const students = appData.students[currentClass] || [];
+
+            if (students.length === 0) {
+                grid.innerHTML = `<p style="color:var(--text-muted); grid-column: 1/-1;">Aucun élève enregistré dans cette classe.</p>`;
+                return;
+            }
+
+            grid.innerHTML = students.map(s => {
+                const data = getStudentWeekData(s.id);
+                const score = calculateScore(data);
+                
+                let scoreClass = 'score-5';
+                if(score === 4) scoreClass = 'score-4';
+                if(score === 3) scoreClass = 'score-3';
+                if(score < 3) scoreClass = 'score-low';
+
+                return `
+                <div class="student-card">
+                    <div class="student-header">
+                        <span class="student-name">${s.name}</span>
+                        <span class="student-score ${scoreClass}">${score}/5</span>
+                    </div>
+
+                    <div class="behavior-counter">
+                        <span style="font-size:0.75rem; font-weight:bold; color:var(--text-muted);">COMPORTEMENT</span>
+                        <div class="counter-dots">
+                            <div class="dot ${data.behaviorPoints >= 1 ? 'active-1' : ''}"></div>
+                            <div class="dot ${data.behaviorPoints >= 2 ? 'active-2' : ''}"></div>
+                            <div class="dot ${data.behaviorPoints >= 3 ? 'active-3' : ''}"></div>
+                        </div>
+                        <div style="display:flex; gap:4px;">
+                            <button class="counter-btn btn-minus" onclick="updateBehavior(${s.id}, -1)">-</button>
+                            <button class="counter-btn btn-plus" onclick="updateBonus(${s.id}, 1)">+</button>
+                        </div>
+                    </div>
+
+                    <div class="toggles-row">
+                        <div class="toggle-btn ${data.noKit ? 'active' : ''}" onclick="toggleMaterial(${s.id}, 'noKit')">Tenue</div>
+                        <div class="toggle-btn ${data.noShoes ? 'active' : ''}" onclick="toggleMaterial(${s.id}, 'noShoes')">Baskets</div>
+                        <div class="toggle-btn ${data.noBook ? 'active' : ''}" onclick="toggleMaterial(${s.id}, 'noBook')">Carnet</div>
+                    </div>
+
+                    <button class="incident-btn ${data.incident ? 'has-incident' : ''}" onclick="openIncidentModal(${s.id}, '${s.name}')">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+                        ${data.incident ? 'Incident Signalé' : 'Flash Incident'}
+                    </button>
+                </div>
+                `;
+            }).join('');
+        }
+
+        // --- ACTIONS TERRAIN ---
+        function updateBehavior(studentId, delta) {
+            const data = getStudentWeekData(studentId);
+            data.behaviorPoints = Math.max(0, Math.min(3, data.behaviorPoints + delta));
+            saveToLocalStorage();
+            renderStudents();
+        }
+
+        function updateBonus(studentId, delta) {
+            const data = getStudentWeekData(studentId);
+            data.bonusPoints = Math.max(0, Math.min(2, data.bonusPoints + delta));
+            saveToLocalStorage();
+            renderStudents();
+        }
+
+        function toggleMaterial(studentId, field) {
+            const data = getStudentWeekData(studentId);
+            data[field] = !data[field];
+            saveToLocalStorage();
+            renderStudents();
+        }
+
+        // --- GESTION MODALE INCIDENTS ---
+        function openIncidentModal(studentId, studentName) {
+            activeStudentForIncident = studentId;
+            document.getElementById('incident-student-name').innerText = `Incident : ${studentName}`;
+            selectedIncidentTypes = [];
+            document.querySelectorAll('#incident-types .chip-opt').forEach(c => c.classList.remove('selected'));
+            document.getElementById('incident-comment').value = '';
+            
+            const data = getStudentWeekData(studentId);
+            if (data.incident) {
+                document.getElementById('incident-comment').value = data.incident.comment || '';
+            }
+
+            document.getElementById('incident-modal').classList.add('active');
+        }
+
+        function toggleIncidentType(element, type) {
+            element.classList.toggle('selected');
+            if (selectedIncidentTypes.includes(type)) {
+                selectedIncidentTypes = selectedIncidentTypes.filter(t => t !== type);
+            } else {
+                selectedIncidentTypes.push(type);
+            }
+        }
+
+        function saveIncident() {
+            if (!activeStudentForIncident) return;
+            const data = getStudentWeekData(activeStudentForIncident);
+            const comment = document.getElementById('incident-comment').value;
+
+            if (selectedIncidentTypes.length > 0 || comment.trim() !== '') {
+                data.incident = {
+                    types: selectedIncidentTypes,
+                    comment: comment,
+                    timestamp: new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})
+                };
+            } else {
+                data.incident = null;
+            }
+
+            saveToLocalStorage();
+            closeIncidentModal();
+            renderStudents();
+        }
+
+        function closeIncidentModal() {
+            document.getElementById('incident-modal').classList.remove('active');
+            activeStudentForIncident = null;
+        }
+
+        // --- RAPPORT PRONOTE ---
+        function generatePronoteReport() {
+            const students = appData.students[currentClass] || [];
+            let report = `=== BILAN EPS - ${currentClass} (Semaine ${currentWeek}) ===\n\n`;
+
+            let incidentsCount = 0;
+            let materialCount = 0;
+
+            students.forEach(s => {
+                const data = getStudentWeekData(s.id);
+                const score = calculateScore(data);
+
+                let issues = [];
+                if (data.noKit) issues.push("Pas de tenue");
+                if (data.noShoes) issues.push("Pas de baskets");
+                if (data.noBook) issues.push("Oubli carnet");
+
+                if (issues.length > 0) {
+                    materialCount++;
+                    report += `• ${s.name} : Note ${score}/5 (${issues.join(', ')})\n`;
+                }
+
+                if (data.incident) {
+                    incidentsCount++;
+                    report += `⚠️ INCIDENT ${s.name} : ${data.incident.types.join(', ')} - "${data.incident.comment}" (${data.incident.timestamp})\n`;
+                }
+            });
+
+            if (incidentsCount === 0 && materialCount === 0) {
+                report += "RAS : Excellent comportement global et tenues complètes sur cette séance.";
+            }
+
+            document.getElementById('report-text').innerText = report;
+            document.getElementById('report-modal').classList.add('active');
+        }
+
+        function copyReport() {
+            const text = document.getElementById('report-text').innerText;
+            navigator.clipboard.writeText(text);
+            alert("Rapport copié dans le presse-papier !");
+        }
+
+        function closeReportModal() {
+            document.getElementById('report-modal').classList.remove('active');
+        }
+
+        // --- MODULE 2: FEEDBACK SÉQUENCE ---
+        function selectOpt(element, group, value) {
+            element.parentElement.querySelectorAll('.btn-opt').forEach(b => b.classList.remove('selected'));
+            element.classList.add('selected');
+            feedbackSelection[group] = value;
+        }
+
+        function saveSequenceFeedback() {
+            const text = document.getElementById('feedback-text').value;
+            if (!appData.sequenceLogs[currentWeek]) appData.sequenceLogs[currentWeek] = {};
+
+            appData.sequenceLogs[currentWeek][currentClass] = {
+                climat: feedbackSelection.climat || 'Non renseigné',
+                moteur: feedbackSelection.moteur || 'Non renseigné',
+                text: text,
+                date: new Date().toLocaleDateString('fr-FR')
+            };
+
+            saveToLocalStorage();
+            alert("Bilan de séance enregistré !");
+        }
+
+        // --- MODULE 3: SUIVI HEBDO & HISTORIQUE ---
+        function renderSuivi() {
+            // Table Récapitulative élèves
+            const tbody = document.getElementById('summary-table-body');
+            const students = appData.students[currentClass] || [];
+
+            tbody.innerHTML = students.map(s => {
+                let totalScore = 0;
+                let weeksRecorded = 0;
+                let totalMaterialOublis = 0;
+                let totalIncidents = 0;
+
+                Object.keys(appData.weeklyRecords).forEach(w => {
+                    const studentData = appData.weeklyRecords[w][s.id];
+                    if (studentData) {
+                        weeksRecorded++;
+                        totalScore += calculateScore(studentData);
+                        if (studentData.noKit || studentData.noShoes) totalMaterialOublis++;
+                        if (studentData.incident) totalIncidents++;
+                    }
+                });
+
+                const avgScore = weeksRecorded > 0 ? (totalScore / weeksRecorded).toFixed(1) : "N/A";
+                
+                let badge = `<span class="badge badge-success">Régulier</span>`;
+                if (totalIncidents > 0 || avgScore < 3) badge = `<span class="badge badge-danger">Vigilance</span>`;
+                else if (totalMaterialOublis > 1) badge = `<span class="badge badge-warning">Matériel</span>`;
+
+                return `
+                    <tr>
+                        <td><b>${s.name}</b></td>
+                        <td>${avgScore} / 5</td>
+                        <td>${totalMaterialOublis}</td>
+                        <td>${totalIncidents}</td>
+                        <td>${badge}</td>
+                    </tr>
+                `;
+            }).join('');
+
+            // Timeline des régulations
+            const timeline = document.getElementById('timeline-container');
+            let logsHtml = '';
+
+            Object.keys(appData.sequenceLogs).reverse().forEach(w => {
+                const log = appData.sequenceLogs[w][currentClass];
+                if (log) {
+                    logsHtml += `
+                        <div class="timeline-item">
+                            <div class="timeline-header">
+                                <span>Semaine ${w} - ${log.date}</span>
+                                <span style="color:var(--accent-blue)">${log.climat}</span>
+                            </div>
+                            <div style="font-size:0.85rem; color:var(--text-main);">
+                                <b>Moteur :</b> ${log.moteur}<br>
+                                <b>Ajustements :</b> ${log.text || 'Aucune note.'}
+                            </div>
+                        </div>
+                    `;
+                }
+            });
+
+            timeline.innerHTML = logsHtml || `<p style="color:var(--text-muted); font-size:0.85rem;">Aucune régulation enregistrée pour cette classe.</p>`;
+        }
+
+        // --- PERSISTENCE LOCALSTORAGE ---
+        function saveToLocalStorage() {
+            localStorage.setItem('eps_pilot_data', JSON.stringify(appData));
+        }
+
+        function loadFromLocalStorage() {
+            const saved = localStorage.getItem('eps_pilot_data');
+            if (saved) {
+                try {
+                    appData = JSON.parse(saved);
+                } catch(e) {}
+            }
+        }
+
+        function loadDemoData() {
+            appData = {
+                classes: ["3e SEGPA", "4e3"],
+                students: {
+                    "3e SEGPA": [
+                        { id: 1, name: "Kévin M." },
+                        { id: 2, name: "Lucas D." },
+                        { id: 3, name: "Yanis B." },
+                        { id: 4, name: "Inès T." },
+                        { id: 5, name: "Mathieu S." }
+                    ]
+                },
+                weeklyRecords: {
+                    1: {
+                        1: { behaviorPoints: 2, noKit: false, noShoes: false, noBook: false, bonusPoints: 0, incident: null },
+                        2: { behaviorPoints: 1, noKit: true, noShoes: false, noBook: false, bonusPoints: 0, incident: { types: ["Insolence / Refus"], comment: "Refuse d'arbitrer", timestamp: "10:15" } },
+                        3: { behaviorPoints: 3, noKit: false, noShoes: false, noBook: false, bonusPoints: 1, incident: null }
+                    }
+                },
+                sequenceLogs: {
+                    1: {
+                        "3e SEGPA": { climat: "🟠 Tensions / Rappels", moteur: "Moyen (50-60%)", text: "Insister sur les rôles sociaux dès l'échauffement.", date: "12/10/2026" }
+                    }
+                }
+            };
+            saveToLocalStorage();
+            renderClasses();
+            renderWeek();
+            alert("Données de démo chargées !");
+        }
+
+        function clearData() {
+            if (confirm("Voulez-vous réinitialiser toutes les données ?")) {
+                localStorage.removeItem('eps_pilot_data');
+                location.reload();
+            }
+        }
+
+        function exportCSV() {
+            let csv = "Classe,Semaine,Elève,Note,OubliTenue,Incident\n";
+            const students = appData.students[currentClass] || [];
+
+            Object.keys(appData.weeklyRecords).forEach(w => {
+                students.forEach(s => {
+                    const data = appData.weeklyRecords[w][s.id];
+                    if (data) {
+                        const score = calculateScore(data);
+                        csv += `"${currentClass}",${w},"${s.name}",${score},${data.noKit || data.noShoes},${data.incident ? 'Oui' : 'Non'}\n`;
+                    }
+                });
+            });
+
+            const blob = new Blob([csv], { type: 'text/csv' });
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `notes_eps_${currentClass.replace(' ','_')}.csv`;
+            a.click();
+        }
+
+        function exportJSON() {
+            const blob = new Blob([JSON.stringify(appData, null, 2)], { type: 'application/json' });
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `eps_pilot_backup.json`;
+            a.click();
+        }
+    </script>
+</body>
+</html>
