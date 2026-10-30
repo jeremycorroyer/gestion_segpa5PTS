@@ -67,7 +67,7 @@
         .incident-btn { background: #334155; border: none; color: white; padding: 6px 10px; border-radius: 6px; font-size: 0.75rem; cursor: pointer; text-align: center; font-weight: 600; width: 100%; display: flex; align-items: center; justify-content: center; gap: 6px; }
         .incident-btn.has-incident { background: var(--accent-red); }
 
-        /* Modale Incident */
+        /* Modale */
         .modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.8); z-index: 200; justify-content: center; align-items: center; padding: 16px; }
         .modal.active { display: flex; }
         .modal-content { background: var(--panel-bg); border: 1px solid var(--panel-border); border-radius: 12px; max-width: 500px; width: 100%; padding: 20px; display: flex; flex-direction: column; gap: 12px; }
@@ -83,14 +83,15 @@
         .crumb-title { font-size: 0.75rem; text-transform: uppercase; color: var(--text-muted); font-weight: bold; }
         .crumb-name { font-size: 0.95rem; font-weight: bold; margin-top: 4px; color: var(--text-main); }
 
-        .feedback-form { background: var(--panel-bg); border: 1px solid var(--panel-border); border-radius: 12px; padding: 16px; display: flex; flex-direction: column; gap: 16px; }
+        .feedback-form { background: var(--panel-bg); border: 1px solid var(--panel-border); border-radius: 12px; padding: 16px; display: flex; flex-direction: column; gap: 16px; margin-bottom: 16px; }
         .form-group { display: flex; flex-direction: column; gap: 6px; }
         .form-label { font-size: 0.85rem; font-weight: bold; color: var(--accent-blue); }
         .btn-selector { display: flex; gap: 8px; }
         .btn-opt { flex: 1; padding: 10px; background: #0f172a; border: 1px solid var(--panel-border); border-radius: 8px; color: white; text-align: center; font-size: 0.85rem; cursor: pointer; }
         .btn-opt.selected { background: var(--accent-blue); color: black; font-weight: bold; }
 
-        textarea { background: #0f172a; border: 1px solid var(--panel-border); color: white; padding: 10px; border-radius: 8px; resize: vertical; min-height: 80px; font-size: 0.9rem; }
+        input[type="text"], textarea, select { background: #0f172a; border: 1px solid var(--panel-border); color: white; padding: 10px; border-radius: 8px; font-size: 0.9rem; width: 100%; }
+        textarea { resize: vertical; min-height: 80px; }
 
         /* Module 3: Suivi Hebdo */
         .summary-table-container { background: var(--panel-bg); border: 1px solid var(--panel-border); border-radius: 12px; overflow-x: auto; margin-bottom: 20px; }
@@ -107,13 +108,17 @@
         .timeline-item { background: var(--panel-bg); border-left: 4px solid var(--accent-blue); border-radius: 0 8px 8px 0; padding: 12px; display: flex; flex-direction: column; gap: 4px; }
         .timeline-header { display: flex; justify-content: space-between; font-weight: bold; font-size: 0.85rem; color: var(--text-muted); }
 
+        /* Listes de gestion d'élèves */
+        .item-list { display: flex; flex-direction: column; gap: 8px; margin-top: 8px; }
+        .item-row { display: flex; justify-content: space-between; align-items: center; background: #0f172a; padding: 8px 12px; border-radius: 6px; border: 1px solid var(--panel-border); }
+        .btn-del { background: var(--accent-red); color: white; border: none; padding: 4px 8px; border-radius: 4px; font-size: 0.75rem; cursor: pointer; font-weight: bold; }
+
         /* Common UI Elements */
         .btn-main { background: var(--accent-blue); color: black; border: none; padding: 12px 16px; border-radius: 8px; font-weight: bold; cursor: pointer; text-align: center; width: 100%; display: flex; justify-content: center; align-items: center; gap: 8px; }
         .btn-secondary { background: #334155; color: white; border: none; padding: 10px 14px; border-radius: 8px; font-weight: 600; cursor: pointer; }
         .actions-row { display: flex; gap: 10px; margin-top: 10px; }
 
         .report-box { background: #0f172a; border: 1px dashed var(--panel-border); padding: 12px; border-radius: 8px; font-family: monospace; font-size: 0.8rem; white-space: pre-wrap; color: #cbd5e1; max-height: 200px; overflow-y: auto; }
-
     </style>
 </head>
 <body>
@@ -150,15 +155,10 @@
     </nav>
 
     <main>
-        <!-- ONGLET 1: CLIMAT ET NOTES (SEGPA) -->
+        <!-- ONGLET 1: CLIMAT ET NOTES -->
         <div id="tab-climat" class="tab-content active">
-            <div class="class-bar" id="class-bar">
-                <!-- Classes injectées par JS -->
-            </div>
-
-            <div class="student-grid" id="student-grid">
-                <!-- Cartes élèves injectées par JS -->
-            </div>
+            <div class="class-bar" id="class-bar"></div>
+            <div class="student-grid" id="student-grid"></div>
 
             <div style="margin-top:20px;">
                 <button class="btn-main" onclick="generatePronoteReport()">
@@ -179,7 +179,7 @@
             </div>
         </div>
 
-        <!-- ONGLET 2: DSD SÉQUENCE & FEEDBACK -->
+        <!-- ONGLET 2: DSD SÉQUENCE -->
         <div id="tab-sequence" class="tab-content">
             <div class="breadcrumbs">
                 <div class="crumb-card">
@@ -240,34 +240,56 @@
                             <th>Statut</th>
                         </tr>
                     </thead>
-                    <tbody id="summary-table-body">
-                        <!-- Rempli par JS -->
-                    </tbody>
+                    <tbody id="summary-table-body"></tbody>
                 </table>
             </div>
 
             <h3 style="font-size: 1rem; color: var(--accent-blue); margin-bottom: 12px;">Historique des Bilans de Séance</h3>
-            <div class="timeline" id="timeline-container">
-                <!-- Rempli par JS -->
-            </div>
+            <div class="timeline" id="timeline-container"></div>
         </div>
 
-        <!-- ONGLET 4: CONFIGURATION & DONNÉES -->
+        <!-- ONGLET 4: CONFIGURATION & GESTION DES ÉLÈVES -->
         <div id="tab-settings" class="tab-content">
+            <!-- GESTION DE LISTE DE CLASSE -->
             <div class="feedback-form">
-                <h3 style="font-size: 1rem; color: var(--accent-blue);">Gestion des Données (Local & Offline)</h3>
-                <p style="font-size: 0.85rem; color: var(--text-muted);">
-                    Toutes les données sont stockées sur votre appareil. Aucune connexion internet n'est requise.
-                </p>
-
-                <div class="actions-row">
-                    <button class="btn-secondary" onclick="exportCSV()">Exporter Notes (CSV)</button>
-                    <button class="btn-secondary" onclick="exportJSON()">Sauvegarder la base (JSON)</button>
+                <h3 style="font-size: 1rem; color: var(--accent-blue);">Gestion des Élèves & Classes</h3>
+                
+                <div class="form-group">
+                    <label class="form-label">Ajouter une nouvelle classe :</label>
+                    <div style="display:flex; gap:8px;">
+                        <input type="text" id="new-class-input" placeholder="Ex: 3e SEGPA, 6e2...">
+                        <button class="btn-secondary" onclick="addNewClass()">Créer</button>
+                    </div>
                 </div>
 
-                <hr style="border-color: var(--panel-border); margin: 8px 0;">
+                <div class="form-group" style="margin-top:10px;">
+                    <label class="form-label">Sélectionner la classe à modifier :</label>
+                    <select id="manage-class-select" onchange="renderStudentManager()"></select>
+                </div>
 
-                <button class="btn-main" style="background: var(--accent-orange);" onclick="loadDemoData()">Charger des données de Démonstration (3e SEGPA)</button>
+                <div class="form-group">
+                    <label class="form-label">Ajouter un élève dans cette classe :</label>
+                    <div style="display:flex; gap:8px;">
+                        <input type="text" id="new-student-input" placeholder="Nom / Prénom de l'élève">
+                        <button class="btn-main" style="width: auto; padding:0 20px;" onclick="addNewStudent()">Ajouter</button>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Liste des élèves enregistrés :</label>
+                    <div class="item-list" id="manager-student-list"></div>
+                </div>
+            </div>
+
+            <!-- EXPORT / SAUVEGARDE -->
+            <div class="feedback-form">
+                <h3 style="font-size: 1rem; color: var(--accent-blue);">Sauvegarde & Exportation</h3>
+                <div class="actions-row">
+                    <button class="btn-secondary" onclick="exportCSV()">Exporter Notes (CSV)</button>
+                    <button class="btn-secondary" onclick="exportJSON()">Sauvegarder (JSON)</button>
+                </div>
+                <hr style="border-color: var(--panel-border); margin: 8px 0;">
+                <button class="btn-main" style="background: var(--accent-orange);" onclick="loadDemoData()">Charger des données de Démonstration</button>
                 <button class="btn-main" style="background: var(--accent-red); margin-top: 8px;" onclick="clearData()">Réinitialiser toutes les données</button>
             </div>
         </div>
@@ -302,16 +324,14 @@
     </div>
 
     <script>
-        // --- ÉTATA DE L'APPLICATION ---
         let currentWeek = 1;
         let currentClass = "3e SEGPA";
         let activeStudentForIncident = null;
         let selectedIncidentTypes = [];
         let feedbackSelection = { climat: '', moteur: '' };
 
-        // Base de données locale de structure
         let appData = {
-            classes: ["3e SEGPA", "4e3", "5e1"],
+            classes: ["3e SEGPA", "4e3"],
             students: {
                 "3e SEGPA": [
                     { id: 1, name: "Kévin M." },
@@ -321,24 +341,22 @@
                     { id: 5, name: "Mathieu S." }
                 ]
             },
-            // Stockage hebdomadaire: { week: { studentId: { behaviorPoints, noKit, noShoes, noBook, bonus, incident } } }
             weeklyRecords: {},
-            // Bilans de séances: { week: { className: { climat, moteur, text, date } } }
             sequenceLogs: {}
         };
 
-        // --- INITIALISATION ---
         window.onload = function() {
             loadFromLocalStorage();
             renderClasses();
             renderWeek();
+            renderStudentManager();
             setupServiceWorker();
         };
 
         function setupServiceWorker() {
             if ('serviceWorker' in navigator) {
                 const swCode = `
-                    const CACHE = 'eps-pilot-v1';
+                    const CACHE = 'eps-pilot-v2';
                     self.addEventListener('install', e => e.waitUntil(caches.open(CACHE).then(c => c.addAll(['/']))));
                     self.addEventListener('fetch', e => e.respondWith(caches.match(e.request).then(r => r || fetch(e.request))));
                 `;
@@ -347,7 +365,6 @@
             }
         }
 
-        // --- NAVIGATION & SEMAINES ---
         function switchTab(tabId) {
             document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
             document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
@@ -356,6 +373,7 @@
             document.getElementById(`tab-${tabId}`).classList.add('active');
 
             if(tabId === 'suivi') renderSuivi();
+            if(tabId === 'settings') renderStudentManager();
         }
 
         function changeWeek(delta) {
@@ -368,7 +386,6 @@
             renderStudents();
         }
 
-        // --- RENDER DYNAMIQUE DES ÉLÈVES ---
         function renderClasses() {
             const bar = document.getElementById('class-bar');
             bar.innerHTML = appData.classes.map(c => `
@@ -398,7 +415,7 @@
         }
 
         function calculateScore(data) {
-            let base = data.behaviorPoints; // 3, 2, 1, 0
+            let base = data.behaviorPoints;
             if (data.noKit || data.noShoes) base = Math.min(base, 2); 
             let finalScore = base + data.bonusPoints;
             return Math.max(0, Math.min(5, finalScore));
@@ -409,7 +426,7 @@
             const students = appData.students[currentClass] || [];
 
             if (students.length === 0) {
-                grid.innerHTML = `<p style="color:var(--text-muted); grid-column: 1/-1;">Aucun élève enregistré dans cette classe.</p>`;
+                grid.innerHTML = `<p style="color:var(--text-muted); grid-column: 1/-1;">Aucun élève enregistré dans cette classe. Allez dans l'onglet "Données" pour en ajouter.</p>`;
                 return;
             }
 
@@ -457,7 +474,6 @@
             }).join('');
         }
 
-        // --- ACTIONS TERRAIN ---
         function updateBehavior(studentId, delta) {
             const data = getStudentWeekData(studentId);
             data.behaviorPoints = Math.max(0, Math.min(3, data.behaviorPoints + delta));
@@ -479,7 +495,68 @@
             renderStudents();
         }
 
-        // --- GESTION MODALE INCIDENTS ---
+        /* --- GESTION DES ÉLÈVES DEPUIS L'ONGLET DONNÉES --- */
+        function renderStudentManager() {
+            const select = document.getElementById('manage-class-select');
+            select.innerHTML = appData.classes.map(c => `<option value="${c}" ${c === currentClass ? 'selected' : ''}>${c}</option>`).join('');
+            
+            const selectedClass = select.value || currentClass;
+            const listContainer = document.getElementById('manager-student-list');
+            const students = appData.students[selectedClass] || [];
+
+            if(students.length === 0) {
+                listContainer.innerHTML = `<p style="font-size:0.8rem; color:var(--text-muted);">Aucun élève dans cette classe.</p>`;
+                return;
+            }
+
+            listContainer.innerHTML = students.map(s => `
+                <div class="item-row">
+                    <span>${s.name}</span>
+                    <button class="btn-del" onclick="removeStudent('${selectedClass}', ${s.id})">Supprimer</button>
+                </div>
+            `).join('');
+        }
+
+        function addNewClass() {
+            const input = document.getElementById('new-class-input');
+            const className = input.value.trim();
+            if(className && !appData.classes.includes(className)) {
+                appData.classes.push(className);
+                appData.students[className] = [];
+                input.value = '';
+                saveToLocalStorage();
+                renderClasses();
+                renderStudentManager();
+            }
+        }
+
+        function addNewStudent() {
+            const select = document.getElementById('manage-class-select');
+            const selectedClass = select.value;
+            const input = document.getElementById('new-student-input');
+            const name = input.value.trim();
+
+            if(name && selectedClass) {
+                if(!appData.students[selectedClass]) appData.students[selectedClass] = [];
+                const newId = Date.now();
+                appData.students[selectedClass].push({ id: newId, name: name });
+                input.value = '';
+                saveToLocalStorage();
+                renderStudentManager();
+                renderStudents();
+            }
+        }
+
+        function removeStudent(className, studentId) {
+            if(confirm("Supprimer cet élève ?")) {
+                appData.students[className] = appData.students[className].filter(s => s.id !== studentId);
+                saveToLocalStorage();
+                renderStudentManager();
+                renderStudents();
+            }
+        }
+
+        /* --- MODALE INCIDENTS --- */
         function openIncidentModal(studentId, studentName) {
             activeStudentForIncident = studentId;
             document.getElementById('incident-student-name').innerText = `Incident : ${studentName}`;
@@ -529,7 +606,7 @@
             activeStudentForIncident = null;
         }
 
-        // --- RAPPORT PRONOTE ---
+        /* --- RAPPORT PRONOTE --- */
         function generatePronoteReport() {
             const students = appData.students[currentClass] || [];
             let report = `=== BILAN EPS - ${currentClass} (Semaine ${currentWeek}) ===\n\n`;
@@ -575,7 +652,7 @@
             document.getElementById('report-modal').classList.remove('active');
         }
 
-        // --- MODULE 2: FEEDBACK SÉQUENCE ---
+        /* --- SÉQUENCE & SUIVI --- */
         function selectOpt(element, group, value) {
             element.parentElement.querySelectorAll('.btn-opt').forEach(b => b.classList.remove('selected'));
             element.classList.add('selected');
@@ -597,9 +674,7 @@
             alert("Bilan de séance enregistré !");
         }
 
-        // --- MODULE 3: SUIVI HEBDO & HISTORIQUE ---
         function renderSuivi() {
-            // Table Récapitulative élèves
             const tbody = document.getElementById('summary-table-body');
             const students = appData.students[currentClass] || [];
 
@@ -636,7 +711,6 @@
                 `;
             }).join('');
 
-            // Timeline des régulations
             const timeline = document.getElementById('timeline-container');
             let logsHtml = '';
 
@@ -661,7 +735,7 @@
             timeline.innerHTML = logsHtml || `<p style="color:var(--text-muted); font-size:0.85rem;">Aucune régulation enregistrée pour cette classe.</p>`;
         }
 
-        // --- PERSISTENCE LOCALSTORAGE ---
+        /* --- STOCKAGE --- */
         function saveToLocalStorage() {
             localStorage.setItem('eps_pilot_data', JSON.stringify(appData));
         }
@@ -687,22 +761,13 @@
                         { id: 5, name: "Mathieu S." }
                     ]
                 },
-                weeklyRecords: {
-                    1: {
-                        1: { behaviorPoints: 2, noKit: false, noShoes: false, noBook: false, bonusPoints: 0, incident: null },
-                        2: { behaviorPoints: 1, noKit: true, noShoes: false, noBook: false, bonusPoints: 0, incident: { types: ["Insolence / Refus"], comment: "Refuse d'arbitrer", timestamp: "10:15" } },
-                        3: { behaviorPoints: 3, noKit: false, noShoes: false, noBook: false, bonusPoints: 1, incident: null }
-                    }
-                },
-                sequenceLogs: {
-                    1: {
-                        "3e SEGPA": { climat: "🟠 Tensions / Rappels", moteur: "Moyen (50-60%)", text: "Insister sur les rôles sociaux dès l'échauffement.", date: "12/10/2026" }
-                    }
-                }
+                weeklyRecords: {},
+                sequenceLogs: {}
             };
             saveToLocalStorage();
             renderClasses();
             renderWeek();
+            renderStudentManager();
             alert("Données de démo chargées !");
         }
 
