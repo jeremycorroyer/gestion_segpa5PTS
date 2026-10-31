@@ -106,7 +106,7 @@
         .chip-opt { background: #0f172a; border: 1px solid var(--panel-border); padding: 8px 12px; border-radius: 6px; font-size: 0.85rem; cursor: pointer; }
         .chip-opt.selected { background: var(--accent-red); color: white; border-color: var(--accent-red); }
 
-        /* Module 2: Dashboard Séquence & Programmation */
+        /* Module 2 & 4 */
         .feedback-form { background: var(--panel-bg); border: 1px solid var(--panel-border); border-radius: 12px; padding: 16px; display: flex; flex-direction: column; gap: 16px; margin-bottom: 16px; }
         .form-group { display: flex; flex-direction: column; gap: 6px; }
         .form-label { font-size: 0.85rem; font-weight: bold; color: var(--accent-blue); }
@@ -117,7 +117,6 @@
         input[type="text"], input[type="number"], textarea, select { background: #0f172a; border: 1px solid var(--panel-border); color: white; padding: 10px; border-radius: 8px; font-size: 0.9rem; width: 100%; }
         textarea { resize: vertical; min-height: 80px; }
 
-        /* Module 3 & 4 */
         .summary-table-container { background: var(--panel-bg); border: 1px solid var(--panel-border); border-radius: 12px; overflow-x: auto; margin-bottom: 20px; }
         table { width: 100%; border-collapse: collapse; text-align: left; font-size: 0.85rem; }
         th, td { padding: 10px 14px; border-bottom: 1px solid var(--panel-border); }
@@ -132,7 +131,7 @@
         .timeline-item { background: var(--panel-bg); border-left: 4px solid var(--accent-blue); border-radius: 0 8px 8px 0; padding: 12px; display: flex; flex-direction: column; gap: 4px; }
         .timeline-header { display: flex; justify-content: space-between; font-weight: bold; font-size: 0.85rem; color: var(--text-muted); }
 
-        .item-list { display: flex; flex-direction: column; gap: 8px; margin-top: 8px; }
+        .item-list { display: flex; flex-direction: column; gap: 8px; margin-top: 8px; max-height: 200px; overflow-y: auto; }
         .item-row { display: flex; justify-content: space-between; align-items: center; background: #0f172a; padding: 8px 12px; border-radius: 6px; border: 1px solid var(--panel-border); }
         .btn-del { background: var(--accent-red); color: white; border: none; padding: 4px 8px; border-radius: 4px; font-size: 0.75rem; cursor: pointer; font-weight: bold; }
 
@@ -171,7 +170,7 @@
             Suivi Hebdo
         </div>
         <div class="nav-tab" onclick="switchTab('settings')">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l-.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
             Données
         </div>
     </nav>
@@ -182,9 +181,7 @@
             <div class="class-bar" id="class-bar"></div>
             
             <div class="toolbar-terrain">
-                <div class="session-selector-bar" id="session-selector-bar">
-                    <!-- Créneaux injectés dynamiquement (ex: Séance 1 - Step, Séance 2 - Boxe) -->
-                </div>
+                <div class="session-selector-bar" id="session-selector-bar"></div>
                 <div class="view-mode-toggle">
                     <button class="view-btn active" id="btn-mode-standard" onclick="setViewGroupMode(false)">Vue Notes</button>
                     <button class="view-btn" id="btn-mode-groups" onclick="setViewGroupMode(true)">🎨 Groupes</button>
@@ -212,48 +209,42 @@
             </div>
         </div>
 
-        <!-- ONGLET 2: SÉQUENCES & PROGRAMMATION ANNUELLE -->
+        <!-- ONGLET 2: SÉQUENCES & PROGRAMMATION -->
         <div id="tab-sequence" class="tab-content">
             <div class="feedback-form">
                 <h3 style="font-size: 1rem; color: var(--accent-blue);">📅 Programmation Annuelle & Cycles (<span id="prog-class-title"></span>)</h3>
-                <p style="font-size: 0.85rem; color: var(--text-muted);">Définissez les blocs d'activités sur l'année pour cette classe.</p>
-                
                 <div style="display:flex; gap:8px; flex-wrap:wrap;">
-                    <input type="text" id="prog-seq-name" placeholder="Nom de l'APSA / Séquence (ex: Step)" style="flex:2; min-width:150px;">
+                    <input type="text" id="prog-seq-name" placeholder="Nom APSA (ex: Step)" style="flex:2; min-width:150px;">
                     <input type="number" id="prog-start-week" placeholder="Semaine début" style="flex:1; min-width:90px;" min="1" max="36">
                     <input type="number" id="prog-end-week" placeholder="Semaine fin" style="flex:1; min-width:90px;" min="1" max="36">
-                    <button class="btn-secondary" onclick="addAnnualSequence()">Ajouter au planning</button>
+                    <button class="btn-secondary" onclick="addAnnualSequence()">Ajouter</button>
                 </div>
-
                 <div class="item-list" id="annual-prog-list" style="margin-top:10px;"></div>
             </div>
 
             <div class="feedback-form">
                 <h3 style="font-size: 1rem; color: var(--accent-blue);">Bilan Flash de Séance (Créneau Actuel)</h3>
                 <div class="form-group">
-                    <label class="form-label">Climat Global du Cours</label>
+                    <label class="form-label">Climat Global</label>
                     <div class="btn-selector" id="climat-selector">
-                        <div class="btn-opt" onclick="selectOpt(this, 'climat', '🟢 Sérénité / Engagement')">🟢 Sérénité</div>
-                        <div class="btn-opt" onclick="selectOpt(this, 'climat', '🟠 Tensions / Rappels')">🟠 Tensions</div>
-                        <div class="btn-opt" onclick="selectOpt(this, 'climat', '🔴 Difficile / Conflits')">🔴 Perturbé</div>
+                        <div class="btn-opt" onclick="selectOpt(this, 'climat', '🟢 Sérénité')">🟢 Sérénité</div>
+                        <div class="btn-opt" onclick="selectOpt(this, 'climat', '🟠 Tensions')">🟠 Tensions</div>
+                        <div class="btn-opt" onclick="selectOpt(this, 'climat', '🔴 Difficile')">🔴 Difficile</div>
                     </div>
                 </div>
-
                 <div class="form-group">
-                    <label class="form-label">Temps de Pratique Moteur Effectif</label>
+                    <label class="form-label">Temps Pratique Moteur</label>
                     <div class="btn-selector" id="moteur-selector">
                         <div class="btn-opt" onclick="selectOpt(this, 'moteur', 'Faible (<40%)')">Faible</div>
                         <div class="btn-opt" onclick="selectOpt(this, 'moteur', 'Moyen (50-60%)')">Moyen</div>
                         <div class="btn-opt" onclick="selectOpt(this, 'moteur', 'Élevé (>70%)')">Élevé</div>
                     </div>
                 </div>
-
                 <div class="form-group">
-                    <label class="form-label">Ajustements Clés pour le Cours Prochain</label>
-                    <textarea id="feedback-text" placeholder="Ex: Relancer l'échauffement sur l'atelier B..."></textarea>
+                    <label class="form-label">Ajustements Cours Prochain</label>
+                    <textarea id="feedback-text" placeholder="Remarques de régulation..."></textarea>
                 </div>
-
-                <button class="btn-main" onclick="saveSequenceFeedback()">Enregistrer le Bilan du Créneau</button>
+                <button class="btn-main" onclick="saveSequenceFeedback()">Enregistrer le Bilan</button>
             </div>
         </div>
 
@@ -274,15 +265,14 @@
                     <tbody id="summary-table-body"></tbody>
                 </table>
             </div>
-
-            <h3 style="font-size: 1rem; color: var(--accent-blue); margin-bottom: 12px;">Historique des Bilans de Séances</h3>
+            <h3 style="font-size: 1rem; color: var(--accent-blue); margin-bottom: 12px;">Historique des Bilans</h3>
             <div class="timeline" id="timeline-container"></div>
         </div>
 
-        <!-- ONGLET 4: CONFIGURATION & GESTION -->
+        <!-- ONGLET 4: CONFIGURATION & IMPORT EN MASSE -->
         <div id="tab-settings" class="tab-content">
             <div class="feedback-form">
-                <h3 style="font-size: 1rem; color: var(--accent-blue);">Gestion des Classes, Élèves & Créneaux</h3>
+                <h3 style="font-size: 1rem; color: var(--accent-blue);">Gestion des Classes & Créneaux</h3>
                 
                 <div class="form-group">
                     <label class="form-label">Ajouter une nouvelle classe :</label>
@@ -293,29 +283,32 @@
                 </div>
 
                 <div class="form-group" style="margin-top:10px;">
-                    <label class="form-label">Sélectionner la classe à configurer :</label>
+                    <label class="form-label">Sélectionner la classe active :</label>
                     <select id="manage-class-select" onchange="renderStudentManager()"></select>
                 </div>
 
                 <div class="form-group">
-                    <label class="form-label">Gérer les créneaux/activités de la semaine (ex: Mardi Step, Jeudi Boxe) :</label>
+                    <label class="form-label">Créneaux de la semaine (ex: Mardi Step) :</label>
                     <div style="display:flex; gap:8px;">
-                        <input type="text" id="new-session-sport-input" placeholder="Nom du sport (ex: Boxe, Step)">
-                        <button class="btn-secondary" onclick="addSessionToClass()">Ajouter un créneau</button>
+                        <input type="text" id="new-session-sport-input" placeholder="Nom du sport / créneau">
+                        <button class="btn-secondary" onclick="addSessionToClass()">Ajouter</button>
                     </div>
                     <div class="item-list" id="class-sessions-manager-list" style="margin-top:6px;"></div>
                 </div>
+            </div>
 
-                <div class="form-group" style="margin-top:10px;">
-                    <label class="form-label">Ajouter un élève :</label>
-                    <div style="display:flex; gap:8px;">
-                        <input type="text" id="new-student-input" placeholder="Nom / Prénom">
-                        <button class="btn-main" style="width: auto; padding:0 20px;" onclick="addNewStudent()">Ajouter</button>
-                    </div>
+            <!-- MODULE IMPORT EN MASSE -->
+            <div class="feedback-form">
+                <h3 style="font-size: 1rem; color: var(--accent-blue);">📥 Importation en Masse des Élèves</h3>
+                <p style="font-size: 0.82rem; color: var(--text-muted);">Copie-colle ta liste de prénoms/noms (1 par ligne) depuis Excel ou un tableur :</p>
+                
+                <div class="form-group">
+                    <textarea id="bulk-students-input" placeholder="Kévin M.&#10;Lucas D.&#10;Yanis B.&#10;Inès T." style="min-height: 120px; font-family:monospace;"></textarea>
+                    <button class="btn-main" onclick="importBulkStudents()">Importer cette liste dans la classe sélectionnée</button>
                 </div>
 
-                <div class="form-group">
-                    <label class="form-label">Liste des élèves :</label>
+                <div class="form-group" style="margin-top:10px;">
+                    <label class="form-label">Élèves actuellement dans la classe :</label>
                     <div class="item-list" id="manager-student-list"></div>
                 </div>
             </div>
@@ -328,7 +321,7 @@
                 </div>
                 <hr style="border-color: var(--panel-border); margin: 8px 0;">
                 <button class="btn-main" style="background: var(--accent-orange);" onclick="loadDemoData()">Charger des données de Démonstration</button>
-                <button class="btn-main" style="background: var(--accent-red); margin-top: 8px;" onclick="clearData()">Réinitialiser toutes les données</button>
+                <button class="btn-main" style="background: var(--accent-red); margin-top: 8px;" onclick="clearData()">Réinitialiser</button>
             </div>
         </div>
     </main>
@@ -369,12 +362,10 @@
 
         let appData = {
             classes: ["3e SEGPA", "4e3"],
-            // Créneaux types par classe pour chaque semaine (ex: [{id: 's1', sport: 'Step'}, {id: 's2', sport: 'Boxe'}])
             classSessionsConfig: {
                 "3e SEGPA": [{ id: 's1', sport: 'Badminton' }],
                 "4e3": [{ id: 's1', sport: 'Rugby' }]
             },
-            // Programmation annuelle par classe: [{name, startWeek, endWeek}]
             annualPrograms: {
                 "3e SEGPA": [
                     { id: 1, name: "Course d'orientation", startWeek: 1, endWeek: 5 },
@@ -408,7 +399,7 @@
         function setupServiceWorker() {
             if ('serviceWorker' in navigator) {
                 const swCode = `
-                    const CACHE = 'eps-pilot-v4';
+                    const CACHE = 'eps-pilot-v5';
                     self.addEventListener('install', e => e.waitUntil(caches.open(CACHE).then(c => c.addAll(['/']))));
                     self.addEventListener('fetch', e => e.respondWith(caches.match(e.request).then(r => r || fetch(e.request))));
                 `;
@@ -454,18 +445,15 @@
 
         function renderClasses() {
             const bar = document.getElementById('class-bar');
-            bar.innerHTML = appData.classes.map(c => {
-                return `
-                    <div class="class-chip ${c === currentClass ? 'active' : ''}" onclick="selectClass('${c}')">
-                        ${c}
-                    </div>
-                `;
-            }).join('');
+            bar.innerHTML = appData.classes.map(c => `
+                <div class="class-chip ${c === currentClass ? 'active' : ''}" onclick="selectClass('${c}')">
+                    ${c}
+                </div>
+            `).join('');
         }
 
         function selectClass(className) {
             currentClass = className;
-            // Sélectionner le premier créneau par défaut s'il existe
             const sessions = appData.classSessionsConfig[currentClass] || [];
             currentSessionId = sessions.length > 0 ? sessions[0].id : 'default';
             renderClasses();
@@ -476,7 +464,6 @@
             const bar = document.getElementById('session-selector-bar');
             const sessions = appData.classSessionsConfig[currentClass] || [{ id: 'default', sport: 'EPS Général' }];
             
-            // Si le créneau courant n'existe plus dans la liste, on prend le premier
             if (!sessions.some(s => s.id === currentSessionId)) {
                 currentSessionId = sessions[0].id;
             }
@@ -531,7 +518,7 @@
             const students = appData.students[currentClass] || [];
 
             if (students.length === 0) {
-                grid.innerHTML = `<p style="color:var(--text-muted); grid-column: 1/-1;">Aucun élève enregistré dans cette classe. Allez dans l'onglet "Données" pour en ajouter.</p>`;
+                grid.innerHTML = `<p style="color:var(--text-muted); grid-column: 1/-1;">Aucun élève enregistré. Allez dans l'onglet "Données" pour importer votre liste.</p>`;
                 return;
             }
 
@@ -636,13 +623,47 @@
             renderStudents();
         }
 
+        /* --- IMPORT EN MASSE --- */
+        importBulkStudents = function() {
+            const select = document.getElementById('manage-class-select');
+            const targetClass = select.value;
+            const text = document.getElementById('bulk-students-input').value.trim();
+
+            if(!text) {
+                alert("Veuillez coller une liste d'élèves.");
+                return;
+            }
+
+            const lines = text.split('\n');
+            if(!appData.students[targetClass]) appData.students[targetClass] = [];
+
+            let addedCount = 0;
+            lines.forEach(line => {
+                const name = line.trim();
+                if(name) {
+                    appData.students[targetClass].push({
+                        id: Date.now() + Math.random(),
+                        name: name,
+                        group: 'none'
+                    });
+                    addedCount++;
+                }
+            });
+
+            document.getElementById('bulk-students-input').value = '';
+            saveToLocalStorage();
+            renderStudentManager();
+            renderStudents();
+            alert(`${addedCount} élèves importés avec succès dans la classe ${targetClass} !`);
+        }
+
         /* --- PROGRAMMATION ANNUELLE --- */
         function renderAnnualProgram() {
             const container = document.getElementById('annual-prog-list');
             const list = appData.annualPrograms[currentClass] || [];
 
             if(list.length === 0) {
-                container.innerHTML = `<p style="font-size:0.8rem; color:var(--text-muted);">Aucune séquence programmée pour cette classe.</p>`;
+                container.innerHTML = `<p style="font-size:0.8rem; color:var(--text-muted);">Aucune séquence programmée.</p>`;
                 return;
             }
 
@@ -676,14 +697,13 @@
             renderAnnualProgram();
         }
 
-        /* --- GESTION DES CLASSES ET CRÉNEAUX --- */
+        /* --- GESTION CLASSES & CRÉNEAUX --- */
         function renderStudentManager() {
             const select = document.getElementById('manage-class-select');
             select.innerHTML = appData.classes.map(c => `<option value="${c}" ${c === currentClass ? 'selected' : ''}>${c}</option>`).join('');
             
             const selectedClass = select.value || currentClass;
             
-            // Gestion des créneaux
             const sessionsContainer = document.getElementById('class-sessions-manager-list');
             const sessions = appData.classSessionsConfig[selectedClass] || [];
             sessionsContainer.innerHTML = sessions.map(s => `
@@ -693,7 +713,6 @@
                 </div>
             `).join('');
 
-            // Gestion des élèves
             const listContainer = document.getElementById('manager-student-list');
             const students = appData.students[selectedClass] || [];
 
@@ -730,7 +749,7 @@
         function removeSessionFromClass(className, sessionId) {
             const sessions = appData.classSessionsConfig[className] || [];
             if(sessions.length <= 1) {
-                alert("Il faut conserver au moins un créneau par classe !");
+                alert("Il faut conserver au moins un créneau !");
                 return;
             }
             appData.classSessionsConfig[className] = sessions.filter(s => s.id !== sessionId);
@@ -751,23 +770,6 @@
                 saveToLocalStorage();
                 renderClasses();
                 renderStudentManager();
-            }
-        }
-
-        function addNewStudent() {
-            const select = document.getElementById('manage-class-select');
-            const selectedClass = select.value;
-            const input = document.getElementById('new-student-input');
-            const name = input.value.trim();
-
-            if(name && selectedClass) {
-                if(!appData.students[selectedClass]) appData.students[selectedClass] = [];
-                const newId = Date.now();
-                appData.students[selectedClass].push({ id: newId, name: name, group: 'none' });
-                input.value = '';
-                saveToLocalStorage();
-                renderStudentManager();
-                renderStudents();
             }
         }
 
@@ -974,7 +976,7 @@
                 }
             });
 
-            timeline.innerHTML = logsHtml || `<p style="color:var(--text-muted); font-size:0.85rem;">Aucune régulation enregistrée pour cette classe.</p>`;
+            timeline.innerHTML = logsHtml || `<p style="color:var(--text-muted); font-size:0.85rem;">Aucune régulation enregistrée.</p>`;
         }
 
         /* --- STOCKAGE --- */
