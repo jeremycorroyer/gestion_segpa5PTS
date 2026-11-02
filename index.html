@@ -51,8 +51,10 @@
         .view-btn.active { background: var(--accent-blue); color: black; border-color: var(--accent-blue); }
 
         .student-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 12px; }
-        .student-card { background: var(--panel-bg); border: 1px solid var(--panel-border); border-radius: 12px; padding: 12px; display: flex; flex-direction: column; gap: 10px; position: relative; }
+        .student-card { background: var(--panel-bg); border: 1px solid var(--panel-border); border-radius: 12px; padding: 12px; display: flex; flex-direction: column; gap: 10px; position: relative; transition: opacity 0.2s; }
         
+        .student-card.is-absent { opacity: 0.45; border-style: dashed; }
+
         .student-card.group-red { border-left: 6px solid #ef4444; }
         .student-card.group-blue { border-left: 6px solid #38bdf8; }
         .student-card.group-green { border-left: 6px solid #22c55e; }
@@ -79,6 +81,7 @@
         .score-4 { background: #38bdf833; color: #38bdf8; border: 1px solid #38bdf8; }
         .score-3 { background: #f9731633; color: #fb923c; border: 1px solid #f97316; }
         .score-low { background: #ef444433; color: #f87171; border: 1px solid #ef4444; }
+        .score-absent { background: #334155; color: var(--text-muted); border: 1px solid var(--panel-border); font-size: 0.9rem; }
 
         .behavior-counter { display: flex; align-items: center; justify-content: space-between; background: #0f172a; padding: 6px 12px; border-radius: 8px; }
         .counter-btn { width: 32px; height: 32px; border-radius: 6px; border: none; font-weight: bold; font-size: 1.2rem; cursor: pointer; display: flex; align-items: center; justify-content: center; }
@@ -90,9 +93,11 @@
         .dot.active-2 { background: var(--accent-orange); box-shadow: 0 0 6px var(--accent-orange); }
         .dot.active-1 { background: var(--accent-red); box-shadow: 0 0 6px var(--accent-red); }
 
-        .toggles-row { display: flex; gap: 6px; }
-        .toggle-btn { flex: 1; padding: 6px; border-radius: 6px; border: 1px solid var(--panel-border); background: #0f172a; color: var(--text-muted); font-size: 0.75rem; text-align: center; cursor: pointer; font-weight: 600; }
+        .toggles-row { display: flex; gap: 3px; }
+        .toggle-btn { flex: 1; padding: 6px 2px; border-radius: 6px; border: 1px solid var(--panel-border); background: #0f172a; color: var(--text-muted); font-size: 0.68rem; text-align: center; cursor: pointer; font-weight: 600; white-space: nowrap; }
         .toggle-btn.active { background: #ef444422; border-color: var(--accent-red); color: #f87171; }
+        .toggle-btn.absent-active { background: #64748b33; border-color: #94a3b8; color: #cbd5e1; }
+        .toggle-btn.late-active { background: #f9731633; border-color: var(--accent-orange); color: #fb923c; }
 
         .incident-btn { background: #334155; border: none; color: white; padding: 6px 10px; border-radius: 6px; font-size: 0.75rem; cursor: pointer; text-align: center; font-weight: 600; width: 100%; display: flex; align-items: center; justify-content: center; gap: 6px; }
         .incident-btn.has-incident { background: var(--accent-red); }
@@ -256,7 +261,9 @@
                     <thead>
                         <tr>
                             <th>Élève</th>
-                            <th>Moy. Note /5</th>
+                            <th>Moy. /5</th>
+                            <th>Absences</th>
+                            <th>Retards</th>
                             <th>Oublis Tenue</th>
                             <th>Incidents</th>
                             <th>Statut</th>
@@ -399,7 +406,7 @@
         function setupServiceWorker() {
             if ('serviceWorker' in navigator) {
                 const swCode = `
-                    const CACHE = 'eps-pilot-v5';
+                    const CACHE = 'eps-pilot-v7';
                     self.addEventListener('install', e => e.waitUntil(caches.open(CACHE).then(c => c.addAll(['/']))));
                     self.addEventListener('fetch', e => e.respondWith(caches.match(e.request).then(r => r || fetch(e.request))));
                 `;
@@ -499,6 +506,8 @@
                     noKit: false,
                     noShoes: false,
                     noBook: false,
+                    isAbsent: false,
+                    isLate: false,
                     bonusPoints: 0,
                     incident: null
                 };
@@ -507,8 +516,10 @@
         }
 
         function calculateScore(data) {
+            if (data.isAbsent) return "ABS";
             let base = data.behaviorPoints;
             if (data.noKit || data.noShoes) base = Math.min(base, 2); 
+            if (data.isLate) base = Math.max(0, base - 1); // Pénalité de 1 pt pour retard
             let finalScore = base + data.bonusPoints;
             return Math.max(0, Math.min(5, finalScore));
         }
@@ -528,11 +539,13 @@
                 const group = s.group || 'none';
                 
                 let scoreClass = 'score-5';
-                if(score === 4) scoreClass = 'score-4';
-                if(score === 3) scoreClass = 'score-3';
-                if(score < 3) scoreClass = 'score-low';
+                if(score === 'ABS') scoreClass = 'score-absent';
+                else if(score === 4) scoreClass = 'score-4';
+                else if(score === 3) scoreClass = 'score-3';
+                else if(score < 3) scoreClass = 'score-low';
 
                 let groupClass = `group-${group}`;
+                let absentClass = data.isAbsent ? 'is-absent' : '';
                 let modeClass = isGroupModeActive ? 'show-group-mode' : '';
 
                 let dotRed = group === 'red' ? 'border:2px solid white;' : '';
@@ -543,13 +556,13 @@
                 let dotNone = group === 'none' ? 'border:2px solid white;' : '';
 
                 return `
-                <div class="student-card ${groupClass} ${modeClass}">
+                <div class="student-card ${groupClass} ${absentClass} ${modeClass}">
                     <div class="student-header">
                         <span class="student-name">
                             <span class="color-badge bg-${group}"></span>
                             ${s.name}
                         </span>
-                        <span class="student-score ${scoreClass}">${score}/5</span>
+                        <span class="student-score ${scoreClass}">${score}${score !== 'ABS' ? '/5' : ''}</span>
                     </div>
 
                     <div class="group-selector-row">
@@ -578,6 +591,8 @@
                     </div>
 
                     <div class="toggles-row">
+                        <div class="toggle-btn ${data.isAbsent ? 'absent-active' : ''}" onclick="toggleMaterial(${s.id}, 'isAbsent')">Absent</div>
+                        <div class="toggle-btn ${data.isLate ? 'late-active' : ''}" onclick="toggleMaterial(${s.id}, 'isLate')">Retard</div>
                         <div class="toggle-btn ${data.noKit ? 'active' : ''}" onclick="toggleMaterial(${s.id}, 'noKit')">Tenue</div>
                         <div class="toggle-btn ${data.noShoes ? 'active' : ''}" onclick="toggleMaterial(${s.id}, 'noShoes')">Baskets</div>
                         <div class="toggle-btn ${data.noBook ? 'active' : ''}" onclick="toggleMaterial(${s.id}, 'noBook')">Carnet</div>
@@ -604,6 +619,7 @@
 
         function updateBehavior(studentId, delta) {
             const data = getStudentWeekData(studentId);
+            if (data.isAbsent) return;
             data.behaviorPoints = Math.max(0, Math.min(3, data.behaviorPoints + delta));
             saveToLocalStorage();
             renderStudents();
@@ -611,6 +627,7 @@
 
         function updateBonus(studentId, delta) {
             const data = getStudentWeekData(studentId);
+            if (data.isAbsent) return;
             data.bonusPoints = Math.max(0, Math.min(2, data.bonusPoints + delta));
             saveToLocalStorage();
             renderStudents();
@@ -843,15 +860,24 @@
 
             let incidentsCount = 0;
             let materialCount = 0;
+            let absentCount = 0;
+            let lateCount = 0;
 
             students.forEach(s => {
                 const data = getStudentWeekData(s.id);
-                const score = calculateScore(data);
+                if (data.isAbsent) {
+                    absentCount++;
+                    report += `• ${s.name} : ABSENT(E)\n`;
+                    return;
+                }
 
                 let issues = [];
+                if (data.isLate) { lateCount++; issues.push("Retard"); }
                 if (data.noKit) issues.push("Pas de tenue");
                 if (data.noShoes) issues.push("Pas de baskets");
                 if (data.noBook) issues.push("Oubli carnet");
+
+                const score = calculateScore(data);
 
                 if (issues.length > 0) {
                     materialCount++;
@@ -864,8 +890,8 @@
                 }
             });
 
-            if (incidentsCount === 0 && materialCount === 0) {
-                report += "RAS : Excellent comportement global et tenues complètes sur cette séance.";
+            if (incidentsCount === 0 && materialCount === 0 && absentCount === 0) {
+                report += "RAS : Excellent comportement global, ponctualité et effectif complet.";
             }
 
             document.getElementById('report-text').innerText = report;
@@ -917,6 +943,8 @@
             tbody.innerHTML = students.map(s => {
                 let totalScore = 0;
                 let weeksRecorded = 0;
+                let totalAbsences = 0;
+                let totalRetards = 0;
                 let totalMaterialOublis = 0;
                 let totalIncidents = 0;
 
@@ -926,10 +954,15 @@
                         Object.keys(classWeeks).forEach(sesId => {
                             const studentData = classWeeks[sesId][s.id];
                             if (studentData) {
-                                weeksRecorded++;
-                                totalScore += calculateScore(studentData);
-                                if (studentData.noKit || studentData.noShoes) totalMaterialOublis++;
-                                if (studentData.incident) totalIncidents++;
+                                if (studentData.isAbsent) {
+                                    totalAbsences++;
+                                } else {
+                                    weeksRecorded++;
+                                    totalScore += calculateScore(studentData);
+                                    if (studentData.isLate) totalRetards++;
+                                    if (studentData.noKit || studentData.noShoes) totalMaterialOublis++;
+                                    if (studentData.incident) totalIncidents++;
+                                }
                             }
                         });
                     }
@@ -938,13 +971,15 @@
                 const avgScore = weeksRecorded > 0 ? (totalScore / weeksRecorded).toFixed(1) : "N/A";
                 
                 let badge = `<span class="badge badge-success">Régulier</span>`;
-                if (totalIncidents > 0 || avgScore < 3) badge = `<span class="badge badge-danger">Vigilance</span>`;
-                else if (totalMaterialOublis > 1) badge = `<span class="badge badge-warning">Matériel</span>`;
+                if (totalIncidents > 0 || totalAbsences >= 3 || avgScore < 3) badge = `<span class="badge badge-danger">Vigilance</span>`;
+                else if (totalMaterialOublis > 1 || totalRetards >= 2) badge = `<span class="badge badge-warning">Avertissement</span>`;
 
                 return `
                     <tr>
                         <td><b>${s.name}</b></td>
                         <td>${avgScore} / 5</td>
+                        <td style="${totalAbsences > 0 ? 'color:var(--accent-red); font-weight:bold;' : ''}">${totalAbsences}</td>
+                        <td style="${totalRetards > 0 ? 'color:var(--accent-orange); font-weight:bold;' : ''}">${totalRetards}</td>
                         <td>${totalMaterialOublis}</td>
                         <td>${totalIncidents}</td>
                         <td>${badge}</td>
@@ -1037,7 +1072,7 @@
         }
 
         function exportCSV() {
-            let csv = "Classe,Semaine,Créneau/Sport,Elève,Note,OubliTenue,Incident\n";
+            let csv = "Classe,Semaine,Créneau/Sport,Elève,Note,Absent,Retard,OubliTenue,Incident\n";
             const students = appData.students[currentClass] || [];
 
             Object.keys(appData.weeklyRecords).forEach(w => {
@@ -1052,7 +1087,7 @@
                             const data = classWeeks[sesId][s.id];
                             if (data) {
                                 const score = calculateScore(data);
-                                csv += `"${currentClass}",${w},"${sportName}","${s.name}",${score},${data.noKit || data.noShoes},${data.incident ? 'Oui' : 'Non'}\n`;
+                                csv += `"${currentClass}",${w},"${sportName}","${s.name}",${score},${data.isAbsent ? 'Oui' : 'Non'},${data.isLate ? 'Oui' : 'Non'},${data.noKit || data.noShoes ? 'Oui' : 'Non'},${data.incident ? 'Oui' : 'Non'}\n`;
                             }
                         });
                     });
