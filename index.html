@@ -12,6 +12,8 @@
             --accent-blue: #38bdf8;
             --accent-green: #22c55e;
             --accent-orange: #f97316;
+            --accent-amber: #f59e0b;
+            --accent-purple: #a855f7;
             --accent-red: #ef4444;
             --text-main: #f8fafc;
             --text-muted: #94a3b8;
@@ -20,40 +22,55 @@
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
         body { background-color: var(--bg-dark); color: var(--text-main); display: flex; flex-direction: column; min-height: 100vh; overflow-x: hidden; }
 
-        header { background: #0f172a; padding: 12px 16px; border-bottom: 1px solid var(--panel-border); display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 100; }
-        .logo-title { font-weight: 800; font-size: 1.1rem; color: var(--accent-blue); display: flex; align-items: center; gap: 8px; }
+        header { background: #0f172a; padding: 10px 16px; border-bottom: 1px solid var(--panel-border); display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 100; gap: 8px; }
+        .logo-title { font-weight: 800; font-size: 1.05rem; color: var(--accent-blue); display: flex; align-items: center; gap: 8px; white-space: nowrap; }
         
-        .header-controls { display: flex; gap: 8px; align-items: center; }
-        .week-select-dropdown { background: var(--panel-bg); color: var(--accent-blue); border: 1px solid var(--panel-border); border-radius: 8px; padding: 6px 10px; font-weight: 600; font-size: 0.85rem; cursor: pointer; }
+        .header-controls { display: flex; gap: 6px; align-items: center; }
+        .week-nav-btn { background: var(--panel-bg); color: var(--text-main); border: 1px solid var(--panel-border); border-radius: 8px; padding: 6px 10px; font-weight: 700; font-size: 0.85rem; cursor: pointer; }
+        .week-nav-btn:hover { border-color: var(--accent-blue); color: var(--accent-blue); }
+        .week-select-dropdown { background: var(--panel-bg); color: var(--accent-blue); border: 1px solid var(--panel-border); border-radius: 8px; padding: 6px 10px; font-weight: 600; font-size: 0.82rem; cursor: pointer; max-width: 240px; }
 
-        nav { background: #0f172a; display: flex; border-bottom: 1px solid var(--panel-border); position: sticky; top: 57px; z-index: 99; }
-        .nav-tab { flex: 1; padding: 12px 8px; text-align: center; font-size: 0.85rem; font-weight: 600; color: var(--text-muted); cursor: pointer; border-bottom: 3px solid transparent; display: flex; flex-direction: column; align-items: center; gap: 4px; }
+        nav { background: #0f172a; display: flex; border-bottom: 1px solid var(--panel-border); position: sticky; top: 53px; z-index: 99; }
+        .nav-tab { flex: 1; padding: 10px 8px; text-align: center; font-size: 0.82rem; font-weight: 600; color: var(--text-muted); cursor: pointer; border-bottom: 3px solid transparent; display: flex; flex-direction: column; align-items: center; gap: 4px; }
         .nav-tab.active { color: var(--accent-blue); border-bottom-color: var(--accent-blue); background: #1e293b40; }
 
-        main { flex: 1; padding: 16px; max-width: 1200px; margin: 0 auto; width: 100%; }
+        main { flex: 1; padding: 14px 16px 80px 16px; max-width: 1200px; margin: 0 auto; width: 100%; }
         .tab-content { display: none; }
         .tab-content.active { display: block; }
 
         /* Module 1: Climat & Notes */
-        .class-bar { display: flex; gap: 10px; margin-bottom: 12px; overflow-x: auto; padding-bottom: 4px; }
-        .class-chip { background: var(--panel-bg); border: 1px solid var(--panel-border); padding: 8px 16px; border-radius: 20px; font-size: 0.85rem; font-weight: 600; cursor: pointer; white-space: nowrap; display: flex; flex-direction: column; align-items: center; }
+        .class-bar { display: flex; gap: 8px; margin-bottom: 10px; overflow-x: auto; padding-bottom: 4px; }
+        .class-chip { background: var(--panel-bg); border: 1px solid var(--panel-border); padding: 7px 14px; border-radius: 20px; font-size: 0.85rem; font-weight: 600; cursor: pointer; white-space: nowrap; display: flex; flex-direction: column; align-items: center; }
         .class-chip.active { background: var(--accent-blue); color: #000; border-color: var(--accent-blue); }
-        .class-chip span { font-size: 0.7rem; opacity: 0.8; }
-        .class-chip.active span { color: #000; }
 
-        .toolbar-terrain { display: flex; flex-wrap: wrap; gap: 10px; justify-content: space-between; align-items: center; margin-bottom: 12px; background: var(--panel-bg); padding: 10px 12px; border-radius: 8px; border: 1px solid var(--panel-border); }
+        .toolbar-terrain { display: flex; flex-wrap: wrap; gap: 8px; justify-content: space-between; align-items: center; margin-bottom: 10px; background: var(--panel-bg); padding: 8px 12px; border-radius: 8px; border: 1px solid var(--panel-border); }
         .session-selector-bar { display: flex; gap: 6px; align-items: center; overflow-x: auto; }
         .session-chip { background: #0f172a; border: 1px solid var(--panel-border); padding: 6px 12px; border-radius: 6px; font-size: 0.8rem; cursor: pointer; color: var(--text-muted); font-weight: 600; white-space: nowrap; }
         .session-chip.active { background: var(--accent-blue); color: #000; border-color: var(--accent-blue); }
 
-        .view-mode-toggle { display: flex; gap: 4px; }
+        .view-mode-toggle { display: flex; gap: 4px; align-items: center; }
         .view-btn { background: #0f172a; border: 1px solid var(--panel-border); color: var(--text-muted); padding: 6px 10px; border-radius: 6px; font-size: 0.75rem; cursor: pointer; font-weight: 600; }
         .view-btn.active { background: var(--accent-blue); color: black; border-color: var(--accent-blue); }
+        .undo-header-btn { background: #f59e0b22; border: 1px solid var(--accent-amber); color: #fbbf24; padding: 6px 10px; border-radius: 6px; font-size: 0.75rem; cursor: pointer; font-weight: 700; display: inline-flex; align-items: center; gap: 4px; }
+        .undo-header-btn:disabled { opacity: 0.35; cursor: not-allowed; border-color: var(--panel-border); color: var(--text-muted); background: #0f172a; }
 
-        .student-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 12px; }
-        .student-card { background: var(--panel-bg); border: 1px solid var(--panel-border); border-radius: 12px; padding: 12px; display: flex; flex-direction: column; gap: 10px; position: relative; transition: opacity 0.2s; }
+        /* Barre d'onglets de statut rapide */
+        .status-filter-bar { display: flex; gap: 6px; margin-bottom: 12px; overflow-x: auto; padding-bottom: 4px; }
+        .status-tab { background: #0f172a; border: 1px solid var(--panel-border); color: var(--text-muted); padding: 7px 12px; border-radius: 8px; font-size: 0.78rem; font-weight: 700; cursor: pointer; white-space: nowrap; display: flex; align-items: center; gap: 6px; }
+        .status-tab.active { background: #1e293b; border-color: var(--accent-blue); color: var(--accent-blue); }
+        .status-tab .count-pill { background: #334155; color: var(--text-main); padding: 1px 6px; border-radius: 10px; font-size: 0.7rem; }
+        .status-tab.active .count-pill { background: var(--accent-blue); color: #000; }
+        .status-tab.tab-shoes.active { border-color: var(--accent-amber); color: #fbbf24; }
+        .status-tab.tab-shoes.active .count-pill { background: var(--accent-amber); color: #000; }
+        .status-tab.tab-nopractice.active { border-color: var(--accent-purple); color: #d8b4fe; }
+        .status-tab.tab-nopractice.active .count-pill { background: var(--accent-purple); color: #000; }
+
+        .student-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(290px, 1fr)); gap: 12px; }
+        .student-card { background: var(--panel-bg); border: 1px solid var(--panel-border); border-radius: 12px; padding: 12px; display: flex; flex-direction: column; gap: 9px; position: relative; transition: all 0.2s; }
         
         .student-card.is-absent { opacity: 0.45; border-style: dashed; }
+        .student-card.is-no-practice { border-color: #a855f788; background: linear-gradient(180deg, #271e38 0%, #1e293b 100%); }
+        .student-card.has-no-shoes { box-shadow: inset 0 0 0 1px #f59e0b88; }
 
         .student-card.group-red { border-left: 6px solid #ef4444; }
         .student-card.group-blue { border-left: 6px solid #38bdf8; }
@@ -61,10 +78,18 @@
         .student-card.group-yellow { border-left: 6px solid #eab308; }
         .student-card.group-purple { border-left: 6px solid #a855f7; }
 
-        .student-header { display: flex; justify-content: space-between; align-items: center; }
+        .student-header { display: flex; justify-content: space-between; align-items: flex-start; gap: 8px; }
+        .student-identity { display: flex; flex-direction: column; gap: 4px; }
         .student-name { font-weight: 700; font-size: 1rem; display: flex; align-items: center; gap: 6px; }
         
-        .color-badge { width: 12px; height: 12px; border-radius: 50%; display: inline-block; }
+        /* Badges d'alerte visuels immédiats (Chaussures / Sans pratique) */
+        .alert-badges-row { display: flex; flex-wrap: wrap; gap: 4px; }
+        .mini-badge { font-size: 0.68rem; font-weight: 800; padding: 2px 7px; border-radius: 5px; display: inline-flex; align-items: center; gap: 4px; letter-spacing: 0.2px; }
+        .mini-badge-shoes { background: #f59e0b33; color: #fbbf24; border: 1px solid #f59e0b; }
+        .mini-badge-nopractice { background: #a855f733; color: #e9d5ff; border: 1px solid #a855f7; }
+        .mini-badge-kit { background: #ef444422; color: #fca5a5; border: 1px solid #ef444488; }
+
+        .color-badge { width: 12px; height: 12px; border-radius: 50%; display: inline-block; flex-shrink: 0; }
         .bg-red { background: #ef4444; }
         .bg-blue { background: #38bdf8; }
         .bg-green { background: #22c55e; }
@@ -72,35 +97,58 @@
         .bg-purple { background: #a855f7; }
         .bg-none { background: #334155; }
 
-        .group-selector-row { display: none; gap: 4px; justify-content: space-between; background: #0f172a; padding: 4px; border-radius: 6px; }
+        .group-selector-row { display: none; gap: 4px; justify-content: space-between; background: #0f172a; padding: 4px 8px; border-radius: 6px; align-items: center; }
         .student-card.show-group-mode .group-selector-row { display: flex; }
-        .group-dot-btn { width: 22px; height: 22px; border-radius: 50%; border: none; cursor: pointer; }
+        .group-dot-btn { width: 22px; height: 22px; border-radius: 50%; border: none; cursor: pointer; font-size: 0.7rem; color: white; }
 
-        .student-score { font-size: 1.2rem; font-weight: 900; padding: 4px 10px; border-radius: 8px; }
+        .student-score { font-size: 1.15rem; font-weight: 900; padding: 4px 10px; border-radius: 8px; white-space: nowrap; }
         .score-5 { background: #22c55e33; color: #4ade80; border: 1px solid #22c55e; }
         .score-4 { background: #38bdf833; color: #38bdf8; border: 1px solid #38bdf8; }
         .score-3 { background: #f9731633; color: #fb923c; border: 1px solid #f97316; }
         .score-low { background: #ef444433; color: #f87171; border: 1px solid #ef4444; }
-        .score-absent { background: #334155; color: var(--text-muted); border: 1px solid var(--panel-border); font-size: 0.9rem; }
+        .score-absent { background: #334155; color: var(--text-muted); border: 1px solid var(--panel-border); font-size: 0.85rem; }
 
-        .behavior-counter { display: flex; align-items: center; justify-content: space-between; background: #0f172a; padding: 6px 12px; border-radius: 8px; }
-        .counter-btn { width: 32px; height: 32px; border-radius: 6px; border: none; font-weight: bold; font-size: 1.2rem; cursor: pointer; display: flex; align-items: center; justify-content: center; }
+        /* Cartons / Comportement avec retour arrière explicite */
+        .behavior-counter { display: flex; align-items: center; justify-content: space-between; background: #0f172a; padding: 6px 10px; border-radius: 8px; gap: 6px; }
+        .behavior-label-wrap { display: flex; flex-direction: column; }
+        .behavior-label { font-size: 0.72rem; font-weight: 700; color: var(--text-muted); }
+        .behavior-sub { font-size: 0.65rem; color: #64748b; }
+        .counter-btn { width: 32px; height: 32px; border-radius: 6px; border: none; font-weight: bold; font-size: 1.1rem; cursor: pointer; display: flex; align-items: center; justify-content: center; }
+        .counter-btn:disabled { opacity: 0.3; cursor: not-allowed; }
         .btn-minus { background: var(--accent-red); color: white; }
+        .btn-restore { background: #334155; color: #e2e8f0; border: 1px solid #475569; font-size: 0.85rem; }
         .btn-plus { background: var(--accent-green); color: white; }
-        .counter-dots { display: flex; gap: 6px; }
-        .dot { width: 12px; height: 12px; border-radius: 50%; background: #334155; }
+        .counter-dots { display: flex; gap: 6px; align-items: center; }
+        .dot { width: 13px; height: 13px; border-radius: 50%; background: #334155; cursor: pointer; transition: transform 0.1s; }
+        .dot:hover { transform: scale(1.15); }
         .dot.active-3 { background: var(--accent-green); box-shadow: 0 0 6px var(--accent-green); }
         .dot.active-2 { background: var(--accent-orange); box-shadow: 0 0 6px var(--accent-orange); }
         .dot.active-1 { background: var(--accent-red); box-shadow: 0 0 6px var(--accent-red); }
+        .bonus-pill { font-size: 0.68rem; font-weight: 800; color: #4ade80; background: #22c55e22; border: 1px solid #22c55e66; padding: 1px 5px; border-radius: 4px; cursor: pointer; }
 
-        .toggles-row { display: flex; gap: 3px; }
-        .toggle-btn { flex: 1; padding: 6px 2px; border-radius: 6px; border: 1px solid var(--panel-border); background: #0f172a; color: var(--text-muted); font-size: 0.68rem; text-align: center; cursor: pointer; font-weight: 600; white-space: nowrap; }
+        /* Statut de présence (Présent / Sans pratique / Absent) */
+        .presence-row { display: grid; grid-template-columns: 1fr 1.25fr 0.85fr; gap: 4px; }
+        .presence-btn { padding: 6px 4px; border-radius: 6px; border: 1px solid var(--panel-border); background: #0f172a; color: var(--text-muted); font-size: 0.7rem; text-align: center; cursor: pointer; font-weight: 700; }
+        .presence-btn.present-active { background: #22c55e22; border-color: var(--accent-green); color: #4ade80; }
+        .presence-btn.nopractice-active { background: #a855f733; border-color: var(--accent-purple); color: #e9d5ff; }
+        .presence-btn.absent-active { background: #64748b33; border-color: #94a3b8; color: #e2e8f0; }
+
+        /* Matériel & Ponctualité */
+        .toggles-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 4px; }
+        .toggle-btn { padding: 6px 2px; border-radius: 6px; border: 1px solid var(--panel-border); background: #0f172a; color: var(--text-muted); font-size: 0.68rem; text-align: center; cursor: pointer; font-weight: 700; white-space: nowrap; }
         .toggle-btn.active { background: #ef444422; border-color: var(--accent-red); color: #f87171; }
-        .toggle-btn.absent-active { background: #64748b33; border-color: #94a3b8; color: #cbd5e1; }
+        .toggle-btn.shoes-active { background: #f59e0b33; border-color: var(--accent-amber); color: #fbbf24; box-shadow: 0 0 8px #f59e0b22; }
         .toggle-btn.late-active { background: #f9731633; border-color: var(--accent-orange); color: #fb923c; }
 
-        .incident-btn { background: #334155; border: none; color: white; padding: 6px 10px; border-radius: 6px; font-size: 0.75rem; cursor: pointer; text-align: center; font-weight: 600; width: 100%; display: flex; align-items: center; justify-content: center; gap: 6px; }
+        .incident-row { display: flex; gap: 6px; }
+        .incident-btn { background: #334155; border: none; color: white; padding: 6px 10px; border-radius: 6px; font-size: 0.75rem; cursor: pointer; text-align: center; font-weight: 600; flex: 1; display: flex; align-items: center; justify-content: center; gap: 6px; }
         .incident-btn.has-incident { background: var(--accent-red); }
+        .incident-clear-btn { background: #0f172a; border: 1px solid var(--accent-red); color: #f87171; padding: 6px 10px; border-radius: 6px; font-size: 0.72rem; font-weight: 700; cursor: pointer; }
+
+        /* Toast d'annulation rapide */
+        .undo-toast { position: fixed; bottom: 16px; left: 50%; transform: translateX(-50%) translateY(120%); background: #0f172a; border: 1px solid var(--accent-amber); color: var(--text-main); padding: 10px 14px; border-radius: 10px; box-shadow: 0 10px 25px rgba(0,0,0,0.6); z-index: 300; display: flex; align-items: center; gap: 12px; font-size: 0.82rem; transition: transform 0.25s ease; max-width: 92vw; }
+        .undo-toast.visible { transform: translateX(-50%) translateY(0); }
+        .undo-toast button { background: var(--accent-amber); color: #000; border: none; padding: 5px 10px; border-radius: 6px; font-weight: 800; cursor: pointer; white-space: nowrap; }
 
         /* Modale */
         .modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.8); z-index: 200; justify-content: center; align-items: center; padding: 16px; }
@@ -119,15 +167,15 @@
         .btn-opt { flex: 1; padding: 10px; background: #0f172a; border: 1px solid var(--panel-border); border-radius: 8px; color: white; text-align: center; font-size: 0.85rem; cursor: pointer; }
         .btn-opt.selected { background: var(--accent-blue); color: black; font-weight: bold; }
 
-        input[type="text"], input[type="number"], textarea, select { background: #0f172a; border: 1px solid var(--panel-border); color: white; padding: 10px; border-radius: 8px; font-size: 0.9rem; width: 100%; }
+        input[type="text"], input[type="number"], input[type="date"], textarea, select { background: #0f172a; border: 1px solid var(--panel-border); color: white; padding: 10px; border-radius: 8px; font-size: 0.9rem; width: 100%; }
         textarea { resize: vertical; min-height: 80px; }
 
         .summary-table-container { background: var(--panel-bg); border: 1px solid var(--panel-border); border-radius: 12px; overflow-x: auto; margin-bottom: 20px; }
-        table { width: 100%; border-collapse: collapse; text-align: left; font-size: 0.85rem; }
-        th, td { padding: 10px 14px; border-bottom: 1px solid var(--panel-border); }
+        table { width: 100%; border-collapse: collapse; text-align: left; font-size: 0.82rem; }
+        th, td { padding: 10px 12px; border-bottom: 1px solid var(--panel-border); }
         th { background: #0f172a; color: var(--accent-blue); font-weight: 600; }
         tr:last-child td { border-bottom: none; }
-        .badge { padding: 2px 6px; border-radius: 4px; font-weight: bold; font-size: 0.75rem; }
+        .badge { padding: 2px 6px; border-radius: 4px; font-weight: bold; font-size: 0.72rem; }
         .badge-danger { background: #ef444433; color: #f87171; }
         .badge-warning { background: #f9731633; color: #fb923c; }
         .badge-success { background: #22c55e33; color: #4ade80; }
@@ -136,15 +184,15 @@
         .timeline-item { background: var(--panel-bg); border-left: 4px solid var(--accent-blue); border-radius: 0 8px 8px 0; padding: 12px; display: flex; flex-direction: column; gap: 4px; }
         .timeline-header { display: flex; justify-content: space-between; font-weight: bold; font-size: 0.85rem; color: var(--text-muted); }
 
-        .item-list { display: flex; flex-direction: column; gap: 8px; margin-top: 8px; max-height: 200px; overflow-y: auto; }
-        .item-row { display: flex; justify-content: space-between; align-items: center; background: #0f172a; padding: 8px 12px; border-radius: 6px; border: 1px solid var(--panel-border); }
+        .item-list { display: flex; flex-direction: column; gap: 8px; margin-top: 8px; max-height: 220px; overflow-y: auto; }
+        .item-row { display: flex; justify-content: space-between; align-items: center; background: #0f172a; padding: 8px 12px; border-radius: 6px; border: 1px solid var(--panel-border); font-size: 0.85rem; }
         .btn-del { background: var(--accent-red); color: white; border: none; padding: 4px 8px; border-radius: 4px; font-size: 0.75rem; cursor: pointer; font-weight: bold; }
 
         .btn-main { background: var(--accent-blue); color: black; border: none; padding: 12px 16px; border-radius: 8px; font-weight: bold; cursor: pointer; text-align: center; width: 100%; display: flex; justify-content: center; align-items: center; gap: 8px; }
         .btn-secondary { background: #334155; color: white; border: none; padding: 10px 14px; border-radius: 8px; font-weight: 600; cursor: pointer; }
         .actions-row { display: flex; gap: 10px; margin-top: 10px; }
 
-        .report-box { background: #0f172a; border: 1px dashed var(--panel-border); padding: 12px; border-radius: 8px; font-family: monospace; font-size: 0.8rem; white-space: pre-wrap; color: #cbd5e1; max-height: 200px; overflow-y: auto; }
+        .report-box { background: #0f172a; border: 1px dashed var(--panel-border); padding: 12px; border-radius: 8px; font-family: monospace; font-size: 0.8rem; white-space: pre-wrap; color: #cbd5e1; max-height: 240px; overflow-y: auto; }
     </style>
 </head>
 <body>
@@ -155,26 +203,26 @@
             EPS Pilot
         </div>
         <div class="header-controls">
-            <select id="week-dropdown" class="week-select-dropdown" onchange="changeWeekDropdown(this.value)">
-                <!-- Généré par JS -->
-            </select>
+            <button class="week-nav-btn" onclick="stepWeek(-1)" title="Semaine précédente">◀</button>
+            <select id="week-dropdown" class="week-select-dropdown" onchange="changeWeekDropdown(this.value)"></select>
+            <button class="week-nav-btn" onclick="stepWeek(1)" title="Semaine suivante">▶</button>
         </div>
     </header>
 
     <nav>
-        <div class="nav-tab active" onclick="switchTab('climat')">
+        <div class="nav-tab active" onclick="switchTab(event, 'climat')">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
             Terrain & Notes
         </div>
-        <div class="nav-tab" onclick="switchTab('sequence')">
+        <div class="nav-tab" onclick="switchTab(event, 'sequence')">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
             Séquences & Planning
         </div>
-        <div class="nav-tab" onclick="switchTab('suivi')">
+        <div class="nav-tab" onclick="switchTab(event, 'suivi')">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
             Suivi Hebdo
         </div>
-        <div class="nav-tab" onclick="switchTab('settings')">
+        <div class="nav-tab" onclick="switchTab(event, 'settings')">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l-.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
             Données
         </div>
@@ -188,10 +236,14 @@
             <div class="toolbar-terrain">
                 <div class="session-selector-bar" id="session-selector-bar"></div>
                 <div class="view-mode-toggle">
+                    <button class="undo-header-btn" id="btn-global-undo" onclick="undoLastAction()" disabled title="Annuler la dernière modification">↩ Annuler</button>
                     <button class="view-btn active" id="btn-mode-standard" onclick="setViewGroupMode(false)">Vue Notes</button>
                     <button class="view-btn" id="btn-mode-groups" onclick="setViewGroupMode(true)">🎨 Groupes</button>
                 </div>
             </div>
+
+            <!-- FILTRES STATUTS TERRAIN -->
+            <div class="status-filter-bar" id="status-filter-bar"></div>
 
             <div class="student-grid" id="student-grid"></div>
 
@@ -220,8 +272,8 @@
                 <h3 style="font-size: 1rem; color: var(--accent-blue);">📅 Programmation Annuelle & Cycles (<span id="prog-class-title"></span>)</h3>
                 <div style="display:flex; gap:8px; flex-wrap:wrap;">
                     <input type="text" id="prog-seq-name" placeholder="Nom APSA (ex: Step)" style="flex:2; min-width:150px;">
-                    <input type="number" id="prog-start-week" placeholder="Semaine début" style="flex:1; min-width:90px;" min="1" max="36">
-                    <input type="number" id="prog-end-week" placeholder="Semaine fin" style="flex:1; min-width:90px;" min="1" max="36">
+                    <select id="prog-start-week" style="flex:1.5; min-width:140px;"></select>
+                    <select id="prog-end-week" style="flex:1.5; min-width:140px;"></select>
                     <button class="btn-secondary" onclick="addAnnualSequence()">Ajouter</button>
                 </div>
                 <div class="item-list" id="annual-prog-list" style="margin-top:10px;"></div>
@@ -263,8 +315,10 @@
                             <th>Élève</th>
                             <th>Moy. /5</th>
                             <th>Absences</th>
+                            <th>Sans prat.</th>
                             <th>Retards</th>
-                            <th>Oublis Tenue</th>
+                            <th>Chaussures</th>
+                            <th>Tenue</th>
                             <th>Incidents</th>
                             <th>Statut</th>
                         </tr>
@@ -278,6 +332,15 @@
 
         <!-- ONGLET 4: CONFIGURATION & IMPORT EN MASSE -->
         <div id="tab-settings" class="tab-content">
+            <div class="feedback-form">
+                <h3 style="font-size: 1rem; color: var(--accent-blue);">📆 Calendrier Scolaire (Semaine 1)</h3>
+                <p style="font-size: 0.82rem; color: var(--text-muted);">Définit le lundi de la Semaine 1 pour afficher automatiquement les dates réelles (ex: du 23 novembre - 27 novembre) :</p>
+                <div style="display:flex; gap:8px; align-items:center;">
+                    <input type="date" id="school-start-date" style="max-width:220px;">
+                    <button class="btn-secondary" onclick="updateSchoolStartDate()">Appliquer le calendrier</button>
+                </div>
+            </div>
+
             <div class="feedback-form">
                 <h3 style="font-size: 1rem; color: var(--accent-blue);">Gestion des Classes & Créneaux</h3>
                 
@@ -333,6 +396,12 @@
         </div>
     </main>
 
+    <!-- TOAST ANNULATION RAPIDE -->
+    <div id="undo-toast" class="undo-toast">
+        <span id="undo-toast-msg">Action effectuée</span>
+        <button onclick="undoLastAction()">↩ Annuler</button>
+    </div>
+
     <!-- MODALE INCIDENTS -->
     <div id="incident-modal" class="modal">
         <div class="modal-content">
@@ -359,15 +428,24 @@
     </div>
 
     <script>
+        const DEFAULT_START_DATE = "2026-08-31"; // Lundi de rentrée scolaire 2026-2027 (Semaine 13 = 23 nov - 27 nov)
+        const MONTHS_FR = ["janvier", "février", "mars", "avril", "mai", "juin", "juillet", "août", "septembre", "octobre", "novembre", "décembre"];
+
         let currentWeek = 1;
         let currentClass = "3e SEGPA";
         let currentSessionId = "default";
+        let currentStatusFilter = "all"; // 'all' | 'present' | 'nopractice' | 'absent' | 'shoes'
         let isGroupModeActive = false;
         let activeStudentForIncident = null;
         let selectedIncidentTypes = [];
         let feedbackSelection = { climat: '', moteur: '' };
 
+        // Pile d'annulation (historique des états avant chaque action terrain)
+        let undoStack = [];
+        let undoToastTimer = null;
+
         let appData = {
+            schoolStartDate: DEFAULT_START_DATE,
             classes: ["3e SEGPA", "4e3"],
             classSessionsConfig: {
                 "3e SEGPA": [{ id: 's1', sport: 'Badminton' }],
@@ -395,6 +473,8 @@
 
         window.onload = function() {
             loadFromLocalStorage();
+            if (!appData.schoolStartDate) appData.schoolStartDate = DEFAULT_START_DATE;
+            detectCurrentSchoolWeek();
             initWeekDropdown();
             renderClasses();
             renderWeek();
@@ -406,7 +486,7 @@
         function setupServiceWorker() {
             if ('serviceWorker' in navigator) {
                 const swCode = `
-                    const CACHE = 'eps-pilot-v7';
+                    const CACHE = 'eps-pilot-v8';
                     self.addEventListener('install', e => e.waitUntil(caches.open(CACHE).then(c => c.addAll(['/']))));
                     self.addEventListener('fetch', e => e.respondWith(caches.match(e.request).then(r => r || fetch(e.request))));
                 `;
@@ -415,13 +495,72 @@
             }
         }
 
+        /* --- CALCUL DES DATES DE SEMAINE (ex: du 23 novembre - 27 novembre) --- */
+        function getMondayOfWeek(weekIndex) {
+            const parts = (appData.schoolStartDate || DEFAULT_START_DATE).split('-').map(Number);
+            const base = new Date(parts[0], parts[1] - 1, parts[2]);
+            // Normaliser sur le lundi de la semaine de départ
+            const day = base.getDay();
+            const diffToMonday = day === 0 ? -6 : 1 - day;
+            base.setDate(base.getDate() + diffToMonday + (weekIndex - 1) * 7);
+            return base;
+        }
+
+        function formatWeekRange(weekIndex, shortMode = false) {
+            const monday = getMondayOfWeek(weekIndex);
+            const friday = new Date(monday);
+            friday.setDate(monday.getDate() + 4);
+
+            const d1 = monday.getDate();
+            const m1 = MONTHS_FR[monday.getMonth()];
+            const d2 = friday.getDate();
+            const m2 = MONTHS_FR[friday.getMonth()];
+
+            if (shortMode) {
+                return `du ${d1} ${m1} - ${d2} ${m2}`;
+            }
+            if (m1 === m2) {
+                return `du ${d1} ${m1} - ${d2} ${m2}`;
+            }
+            return `du ${d1} ${m1} - ${d2} ${m2}`;
+        }
+
+        function detectCurrentSchoolWeek() {
+            const today = new Date();
+            const startMonday = getMondayOfWeek(1);
+            const diffDays = Math.floor((today - startMonday) / (1000 * 60 * 60 * 24));
+            const computedWeek = Math.floor(diffDays / 7) + 1;
+            if (computedWeek >= 1 && computedWeek <= 44) {
+                currentWeek = computedWeek;
+            }
+        }
+
         function initWeekDropdown() {
             const select = document.getElementById('week-dropdown');
+            const progStart = document.getElementById('prog-start-week');
+            const progEnd = document.getElementById('prog-end-week');
             let html = '';
-            for(let i = 1; i <= 36; i++) {
-                html += `<option value="${i}" ${i === currentWeek ? 'selected' : ''}>Semaine ${i}</option>`;
+            for (let i = 1; i <= 44; i++) {
+                const label = formatWeekRange(i);
+                html += `<option value="${i}" ${i === currentWeek ? 'selected' : ''}>${label}</option>`;
             }
             select.innerHTML = html;
+            if (progStart && progEnd) {
+                progStart.innerHTML = html;
+                progEnd.innerHTML = html;
+            }
+            const dateInput = document.getElementById('school-start-date');
+            if (dateInput) dateInput.value = appData.schoolStartDate || DEFAULT_START_DATE;
+        }
+
+        function updateSchoolStartDate() {
+            const val = document.getElementById('school-start-date').value;
+            if (!val) return;
+            appData.schoolStartDate = val;
+            saveToLocalStorage();
+            initWeekDropdown();
+            renderWeek();
+            renderAnnualProgram();
         }
 
         function changeWeekDropdown(val) {
@@ -429,17 +568,26 @@
             renderWeek();
         }
 
-        function switchTab(tabId) {
+        function stepWeek(delta) {
+            const next = Math.max(1, Math.min(44, currentWeek + delta));
+            if (next !== currentWeek) {
+                currentWeek = next;
+                renderWeek();
+            }
+        }
+
+        function switchTab(ev, tabId) {
             document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
             document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
             
-            event.currentTarget.classList.add('active');
+            if (ev && ev.currentTarget) ev.currentTarget.classList.add('active');
             document.getElementById(`tab-${tabId}`).classList.add('active');
 
-            if(tabId === 'suivi') renderSuivi();
-            if(tabId === 'settings') renderStudentManager();
-            if(tabId === 'sequence') {
+            if (tabId === 'suivi') renderSuivi();
+            if (tabId === 'settings') renderStudentManager();
+            if (tabId === 'sequence') {
                 document.getElementById('prog-class-title').innerText = currentClass;
+                initWeekDropdown();
                 renderAnnualProgram();
             }
         }
@@ -495,6 +643,11 @@
             renderStudents();
         }
 
+        function setStatusFilter(filterKey) {
+            currentStatusFilter = filterKey;
+            renderStudents();
+        }
+
         function getStudentWeekData(studentId) {
             if (!appData.weeklyRecords[currentWeek]) appData.weeklyRecords[currentWeek] = {};
             if (!appData.weeklyRecords[currentWeek][currentClass]) appData.weeklyRecords[currentWeek][currentClass] = {};
@@ -507,46 +660,166 @@
                     noShoes: false,
                     noBook: false,
                     isAbsent: false,
+                    noPractice: false,
                     isLate: false,
                     bonusPoints: 0,
                     incident: null
                 };
             }
-            return appData.weeklyRecords[currentWeek][currentClass][currentSessionId][studentId];
+            const rec = appData.weeklyRecords[currentWeek][currentClass][currentSessionId][studentId];
+            if (typeof rec.noPractice === 'undefined') rec.noPractice = false;
+            return rec;
+        }
+
+        /* --- HISTORIQUE / ANNULATION (UNDO) --- */
+        function pushUndoState(studentId, studentName, actionLabel) {
+            const currentData = getStudentWeekData(studentId);
+            undoStack.push({
+                week: currentWeek,
+                className: currentClass,
+                sessionId: currentSessionId,
+                studentId: studentId,
+                studentName: studentName,
+                label: actionLabel,
+                snapshot: JSON.parse(JSON.stringify(currentData))
+            });
+            if (undoStack.length > 30) undoStack.shift();
+            updateUndoUI(`${studentName} : ${actionLabel}`);
+        }
+
+        function updateUndoUI(toastMessage = null) {
+            const btn = document.getElementById('btn-global-undo');
+            if (btn) {
+                btn.disabled = undoStack.length === 0;
+                btn.innerText = undoStack.length > 0 ? `↩ Annuler (${undoStack.length})` : `↩ Annuler`;
+            }
+            if (toastMessage) {
+                const toast = document.getElementById('undo-toast');
+                const msg = document.getElementById('undo-toast-msg');
+                msg.innerText = toastMessage;
+                toast.classList.add('visible');
+                clearTimeout(undoToastTimer);
+                undoToastTimer = setTimeout(() => {
+                    toast.classList.remove('visible');
+                }, 4500);
+            }
+        }
+
+        function undoLastAction() {
+            if (undoStack.length === 0) return;
+            const last = undoStack.pop();
+            if (!appData.weeklyRecords[last.week]) appData.weeklyRecords[last.week] = {};
+            if (!appData.weeklyRecords[last.week][last.className]) appData.weeklyRecords[last.week][last.className] = {};
+            if (!appData.weeklyRecords[last.week][last.className][last.sessionId]) appData.weeklyRecords[last.week][last.className][last.sessionId] = {};
+            
+            appData.weeklyRecords[last.week][last.className][last.sessionId][last.studentId] = last.snapshot;
+            saveToLocalStorage();
+            updateUndoUI();
+            document.getElementById('undo-toast').classList.remove('visible');
+            renderStudents();
         }
 
         function calculateScore(data) {
             if (data.isAbsent) return "ABS";
             let base = data.behaviorPoints;
             if (data.noKit || data.noShoes) base = Math.min(base, 2); 
-            if (data.isLate) base = Math.max(0, base - 1); // Pénalité de 1 pt pour retard
+            if (data.isLate) base = Math.max(0, base - 1);
             let finalScore = base + data.bonusPoints;
             return Math.max(0, Math.min(5, finalScore));
+        }
+
+        function renderStatusFilterBar(students) {
+            const bar = document.getElementById('status-filter-bar');
+            let countAll = students.length;
+            let countPresent = 0;
+            let countNoPractice = 0;
+            let countAbsent = 0;
+            let countShoes = 0;
+
+            students.forEach(s => {
+                const d = getStudentWeekData(s.id);
+                if (d.isAbsent) {
+                    countAbsent++;
+                } else if (d.noPractice) {
+                    countNoPractice++;
+                    if (d.noShoes) countShoes++;
+                } else {
+                    countPresent++;
+                    if (d.noShoes) countShoes++;
+                }
+            });
+
+            bar.innerHTML = `
+                <div class="status-tab ${currentStatusFilter === 'all' ? 'active' : ''}" onclick="setStatusFilter('all')">
+                    Tous <span class="count-pill">${countAll}</span>
+                </div>
+                <div class="status-tab ${currentStatusFilter === 'present' ? 'active' : ''}" onclick="setStatusFilter('present')">
+                    ✅ Présents (pratique) <span class="count-pill">${countPresent}</span>
+                </div>
+                <div class="status-tab tab-nopractice ${currentStatusFilter === 'nopractice' ? 'active' : ''}" onclick="setStatusFilter('nopractice')">
+                    🪑 Présent sans pratique <span class="count-pill">${countNoPractice}</span>
+                </div>
+                <div class="status-tab tab-shoes ${currentStatusFilter === 'shoes' ? 'active' : ''}" onclick="setStatusFilter('shoes')">
+                    👟 Oubli chaussures <span class="count-pill">${countShoes}</span>
+                </div>
+                <div class="status-tab ${currentStatusFilter === 'absent' ? 'active' : ''}" onclick="setStatusFilter('absent')">
+                    🚫 Absents <span class="count-pill">${countAbsent}</span>
+                </div>
+            `;
         }
 
         function renderStudents() {
             const grid = document.getElementById('student-grid');
             const students = appData.students[currentClass] || [];
 
+            renderStatusFilterBar(students);
+
             if (students.length === 0) {
                 grid.innerHTML = `<p style="color:var(--text-muted); grid-column: 1/-1;">Aucun élève enregistré. Allez dans l'onglet "Données" pour importer votre liste.</p>`;
                 return;
             }
 
-            grid.innerHTML = students.map(s => {
+            const filteredStudents = students.filter(s => {
+                const data = getStudentWeekData(s.id);
+                if (currentStatusFilter === 'present') return !data.isAbsent && !data.noPractice;
+                if (currentStatusFilter === 'nopractice') return !data.isAbsent && data.noPractice;
+                if (currentStatusFilter === 'absent') return data.isAbsent;
+                if (currentStatusFilter === 'shoes') return !data.isAbsent && data.noShoes;
+                return true;
+            });
+
+            if (filteredStudents.length === 0) {
+                grid.innerHTML = `<p style="color:var(--text-muted); grid-column: 1/-1; padding: 16px; background: var(--panel-bg); border-radius: 10px; border: 1px solid var(--panel-border);">Aucun élève dans cet onglet pour le moment.</p>`;
+                return;
+            }
+
+            grid.innerHTML = filteredStudents.map(s => {
                 const data = getStudentWeekData(s.id);
                 const score = calculateScore(data);
                 const group = s.group || 'none';
+                const isPresentPractice = !data.isAbsent && !data.noPractice;
                 
                 let scoreClass = 'score-5';
-                if(score === 'ABS') scoreClass = 'score-absent';
-                else if(score === 4) scoreClass = 'score-4';
-                else if(score === 3) scoreClass = 'score-3';
-                else if(score < 3) scoreClass = 'score-low';
+                if (score === 'ABS') scoreClass = 'score-absent';
+                else if (score === 4) scoreClass = 'score-4';
+                else if (score === 3) scoreClass = 'score-3';
+                else if (score < 3) scoreClass = 'score-low';
 
                 let groupClass = `group-${group}`;
-                let absentClass = data.isAbsent ? 'is-absent' : '';
+                let stateClass = data.isAbsent ? 'is-absent' : (data.noPractice ? 'is-no-practice' : '');
+                let shoesCardClass = (!data.isAbsent && data.noShoes) ? 'has-no-shoes' : '';
                 let modeClass = isGroupModeActive ? 'show-group-mode' : '';
+
+                let badgesHtml = '';
+                if (!data.isAbsent && data.noShoes) {
+                    badgesHtml += `<span class="mini-badge mini-badge-shoes">👟 Sans chaussures</span>`;
+                }
+                if (!data.isAbsent && data.noPractice) {
+                    badgesHtml += `<span class="mini-badge mini-badge-nopractice">🪑 Sans pratique</span>`;
+                }
+                if (!data.isAbsent && data.noKit) {
+                    badgesHtml += `<span class="mini-badge mini-badge-kit">👕 Sans tenue</span>`;
+                }
 
                 let dotRed = group === 'red' ? 'border:2px solid white;' : '';
                 let dotBlue = group === 'blue' ? 'border:2px solid white;' : '';
@@ -555,13 +828,18 @@
                 let dotPurple = group === 'purple' ? 'border:2px solid white;' : '';
                 let dotNone = group === 'none' ? 'border:2px solid white;' : '';
 
+                const canRestoreCarton = !data.isAbsent && (data.behaviorPoints < 3 || data.bonusPoints > 0);
+
                 return `
-                <div class="student-card ${groupClass} ${absentClass} ${modeClass}">
+                <div class="student-card ${groupClass} ${stateClass} ${shoesCardClass} ${modeClass}">
                     <div class="student-header">
-                        <span class="student-name">
-                            <span class="color-badge bg-${group}"></span>
-                            ${s.name}
-                        </span>
+                        <div class="student-identity">
+                            <span class="student-name">
+                                <span class="color-badge bg-${group}"></span>
+                                ${s.name}
+                            </span>
+                            ${badgesHtml ? `<div class="alert-badges-row">${badgesHtml}</div>` : ''}
+                        </div>
                         <span class="student-score ${scoreClass}">${score}${score !== 'ABS' ? '/5' : ''}</span>
                     </div>
 
@@ -577,50 +855,131 @@
                         </div>
                     </div>
 
+                    <!-- STATUT PRÉSENCE : Présent / Sans pratique / Absent -->
+                    <div class="presence-row">
+                        <div class="presence-btn ${isPresentPractice ? 'present-active' : ''}" onclick="setPresenceState(${s.id}, 'present')">Présent</div>
+                        <div class="presence-btn ${!data.isAbsent && data.noPractice ? 'nopractice-active' : ''}" onclick="setPresenceState(${s.id}, 'nopractice')">Sans pratique</div>
+                        <div class="presence-btn ${data.isAbsent ? 'absent-active' : ''}" onclick="setPresenceState(${s.id}, 'absent')">Absent</div>
+                    </div>
+
+                    <!-- CARTONS / COMPORTEMENT AVEC RETOUR ARRIÈRE -->
                     <div class="behavior-counter">
-                        <span style="font-size:0.75rem; font-weight:bold; color:var(--text-muted);">COMPORTEMENT</span>
+                        <div class="behavior-label-wrap">
+                            <span class="behavior-label">CARTONS (${data.behaviorPoints}/3)</span>
+                            <span class="behavior-sub">Clic point = rétablir</span>
+                        </div>
                         <div class="counter-dots">
-                            <div class="dot ${data.behaviorPoints >= 1 ? 'active-1' : ''}"></div>
-                            <div class="dot ${data.behaviorPoints >= 2 ? 'active-2' : ''}"></div>
-                            <div class="dot ${data.behaviorPoints >= 3 ? 'active-3' : ''}"></div>
+                            <div class="dot ${data.behaviorPoints >= 1 ? 'active-1' : ''}" onclick="setBehaviorExact(${s.id}, 1)" title="Rétablir à 1 pt"></div>
+                            <div class="dot ${data.behaviorPoints >= 2 ? 'active-2' : ''}" onclick="setBehaviorExact(${s.id}, 2)" title="Rétablir à 2 pts"></div>
+                            <div class="dot ${data.behaviorPoints >= 3 ? 'active-3' : ''}" onclick="setBehaviorExact(${s.id}, 3)" title="Rétablir à 3 pts (0 carton)"></div>
+                            ${data.bonusPoints > 0 ? `<span class="bonus-pill" onclick="resetBonus(${s.id})" title="Clic pour retirer le bonus">+${data.bonusPoints}</span>` : ''}
                         </div>
                         <div style="display:flex; gap:4px;">
-                            <button class="counter-btn btn-minus" onclick="updateBehavior(${s.id}, -1)">-</button>
-                            <button class="counter-btn btn-plus" onclick="updateBonus(${s.id}, 1)">+</button>
+                            <button class="counter-btn btn-minus" onclick="updateBehavior(${s.id}, -1)" title="Mettre un carton (-1)">-</button>
+                            <button class="counter-btn btn-restore" onclick="restoreBehaviorStep(${s.id})" ${canRestoreCarton ? '' : 'disabled'} title="Retirer un carton / revenir en arrière">↩</button>
+                            <button class="counter-btn btn-plus" onclick="updateBonus(${s.id}, 1)" title="Ajouter un bonus (+1)">+</button>
                         </div>
                     </div>
 
+                    <!-- MATÉRIEL & RETARD -->
                     <div class="toggles-row">
-                        <div class="toggle-btn ${data.isAbsent ? 'absent-active' : ''}" onclick="toggleMaterial(${s.id}, 'isAbsent')">Absent</div>
-                        <div class="toggle-btn ${data.isLate ? 'late-active' : ''}" onclick="toggleMaterial(${s.id}, 'isLate')">Retard</div>
-                        <div class="toggle-btn ${data.noKit ? 'active' : ''}" onclick="toggleMaterial(${s.id}, 'noKit')">Tenue</div>
-                        <div class="toggle-btn ${data.noShoes ? 'active' : ''}" onclick="toggleMaterial(${s.id}, 'noShoes')">Baskets</div>
-                        <div class="toggle-btn ${data.noBook ? 'active' : ''}" onclick="toggleMaterial(${s.id}, 'noBook')">Carnet</div>
+                        <div class="toggle-btn ${data.noShoes ? 'shoes-active' : ''}" onclick="toggleMaterial(${s.id}, 'noShoes')">👟 Chaussures</div>
+                        <div class="toggle-btn ${data.noKit ? 'active' : ''}" onclick="toggleMaterial(${s.id}, 'noKit')">👕 Tenue</div>
+                        <div class="toggle-btn ${data.isLate ? 'late-active' : ''}" onclick="toggleMaterial(${s.id}, 'isLate')">⏰ Retard</div>
+                        <div class="toggle-btn ${data.noBook ? 'active' : ''}" onclick="toggleMaterial(${s.id}, 'noBook')">📓 Carnet</div>
                     </div>
 
-                    <button class="incident-btn ${data.incident ? 'has-incident' : ''}" onclick="openIncidentModal(${s.id}, '${s.name}')">
-                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
-                        ${data.incident ? 'Incident Signalé' : 'Flash Incident'}
-                    </button>
+                    <div class="incident-row">
+                        <button class="incident-btn ${data.incident ? 'has-incident' : ''}" onclick="openIncidentModal(${s.id}, '${s.name.replace(/'/g, "\'")}')">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+                            ${data.incident ? 'Incident Signalé (Modifier)' : 'Flash Incident'}
+                        </button>
+                        ${data.incident ? `<button class="incident-clear-btn" onclick="clearIncident(${s.id})" title="Annuler l'incident">✕</button>` : ''}
+                    </div>
                 </div>
                 `;
             }).join('');
         }
 
+        function getStudentName(studentId) {
+            const st = (appData.students[currentClass] || []).find(s => s.id === studentId);
+            return st ? st.name : "Élève";
+        }
+
         function setStudentGroup(studentId, groupColor) {
             const students = appData.students[currentClass] || [];
             const st = students.find(s => s.id === studentId);
-            if(st) {
+            if (st) {
                 st.group = groupColor;
                 saveToLocalStorage();
                 renderStudents();
             }
         }
 
+        function setPresenceState(studentId, mode) {
+            const data = getStudentWeekData(studentId);
+            const name = getStudentName(studentId);
+            if (mode === 'present') {
+                if (!data.isAbsent && !data.noPractice) return;
+                pushUndoState(studentId, name, "Passage en Présent (pratique)");
+                data.isAbsent = false;
+                data.noPractice = false;
+            } else if (mode === 'nopractice') {
+                if (!data.isAbsent && data.noPractice) return;
+                pushUndoState(studentId, name, "Passage en Présent sans pratique");
+                data.isAbsent = false;
+                data.noPractice = true;
+            } else if (mode === 'absent') {
+                if (data.isAbsent) return;
+                pushUndoState(studentId, name, "Marqué Absent");
+                data.isAbsent = true;
+                data.noPractice = false;
+            }
+            saveToLocalStorage();
+            renderStudents();
+        }
+
         function updateBehavior(studentId, delta) {
             const data = getStudentWeekData(studentId);
             if (data.isAbsent) return;
-            data.behaviorPoints = Math.max(0, Math.min(3, data.behaviorPoints + delta));
+            const nextVal = Math.max(0, Math.min(3, data.behaviorPoints + delta));
+            if (nextVal === data.behaviorPoints) return;
+            pushUndoState(studentId, getStudentName(studentId), delta < 0 ? `Carton (${nextVal}/3)` : `Comportement (${nextVal}/3)`);
+            data.behaviorPoints = nextVal;
+            saveToLocalStorage();
+            renderStudents();
+        }
+
+        function setBehaviorExact(studentId, targetPoints) {
+            const data = getStudentWeekData(studentId);
+            if (data.isAbsent || data.behaviorPoints === targetPoints) return;
+            pushUndoState(studentId, getStudentName(studentId), `Comportement rétabli à ${targetPoints}/3`);
+            data.behaviorPoints = targetPoints;
+            saveToLocalStorage();
+            renderStudents();
+        }
+
+        function restoreBehaviorStep(studentId) {
+            const data = getStudentWeekData(studentId);
+            if (data.isAbsent) return;
+            if (data.behaviorPoints < 3) {
+                pushUndoState(studentId, getStudentName(studentId), `Carton retiré (${data.behaviorPoints + 1}/3)`);
+                data.behaviorPoints += 1;
+            } else if (data.bonusPoints > 0) {
+                pushUndoState(studentId, getStudentName(studentId), `Bonus retiré`);
+                data.bonusPoints -= 1;
+            } else {
+                return;
+            }
+            saveToLocalStorage();
+            renderStudents();
+        }
+
+        function resetBonus(studentId) {
+            const data = getStudentWeekData(studentId);
+            if (data.isAbsent || data.bonusPoints === 0) return;
+            pushUndoState(studentId, getStudentName(studentId), "Bonus retiré");
+            data.bonusPoints = 0;
             saveToLocalStorage();
             renderStudents();
         }
@@ -628,36 +987,56 @@
         function updateBonus(studentId, delta) {
             const data = getStudentWeekData(studentId);
             if (data.isAbsent) return;
-            data.bonusPoints = Math.max(0, Math.min(2, data.bonusPoints + delta));
+            const nextBonus = Math.max(0, Math.min(2, data.bonusPoints + delta));
+            if (nextBonus === data.bonusPoints) return;
+            pushUndoState(studentId, getStudentName(studentId), `Bonus (+${nextBonus})`);
+            data.bonusPoints = nextBonus;
             saveToLocalStorage();
             renderStudents();
         }
 
         function toggleMaterial(studentId, field) {
             const data = getStudentWeekData(studentId);
+            const labels = {
+                noShoes: !data.noShoes ? "Oubli chaussures signalé" : "Oubli chaussures annulé",
+                noKit: !data.noKit ? "Oubli tenue signalé" : "Oubli tenue annulé",
+                isLate: !data.isLate ? "Retard signalé" : "Retard annulé",
+                noBook: !data.noBook ? "Oubli carnet signalé" : "Oubli carnet annulé"
+            };
+            pushUndoState(studentId, getStudentName(studentId), labels[field] || "Modification");
             data[field] = !data[field];
             saveToLocalStorage();
             renderStudents();
         }
 
+        function clearIncident(studentId) {
+            const data = getStudentWeekData(studentId);
+            if (!data.incident) return;
+            pushUndoState(studentId, getStudentName(studentId), "Incident annulé");
+            data.incident = null;
+            saveToLocalStorage();
+            renderStudents();
+        }
+
         /* --- IMPORT EN MASSE --- */
-        importBulkStudents = function() {
+        function importBulkStudents() {
             const select = document.getElementById('manage-class-select');
             const targetClass = select.value;
             const text = document.getElementById('bulk-students-input').value.trim();
 
-            if(!text) {
+            if (!text) {
                 alert("Veuillez coller une liste d'élèves.");
                 return;
             }
 
-            const lines = text.split('\n');
-            if(!appData.students[targetClass]) appData.students[targetClass] = [];
+            const lines = text.split('
+');
+            if (!appData.students[targetClass]) appData.students[targetClass] = [];
 
             let addedCount = 0;
             lines.forEach(line => {
                 const name = line.trim();
-                if(name) {
+                if (name) {
                     appData.students[targetClass].push({
                         id: Date.now() + Math.random(),
                         name: name,
@@ -679,14 +1058,14 @@
             const container = document.getElementById('annual-prog-list');
             const list = appData.annualPrograms[currentClass] || [];
 
-            if(list.length === 0) {
+            if (list.length === 0) {
                 container.innerHTML = `<p style="font-size:0.8rem; color:var(--text-muted);">Aucune séquence programmée.</p>`;
                 return;
             }
 
             container.innerHTML = list.map(item => `
                 <div class="item-row">
-                    <span><b>${item.name}</b> (Semaines ${item.startWeek} à ${item.endWeek})</span>
+                    <span><b>${item.name}</b> (${formatWeekRange(item.startWeek)} ➔ ${formatWeekRange(item.endWeek)})</span>
                     <button class="btn-del" onclick="removeAnnualSequence(${item.id})">Supprimer</button>
                 </div>
             `).join('');
@@ -697,12 +1076,10 @@
             const startWeek = parseInt(document.getElementById('prog-start-week').value);
             const endWeek = parseInt(document.getElementById('prog-end-week').value);
 
-            if(name && startWeek && endWeek) {
-                if(!appData.annualPrograms[currentClass]) appData.annualPrograms[currentClass] = [];
+            if (name && startWeek && endWeek) {
+                if (!appData.annualPrograms[currentClass]) appData.annualPrograms[currentClass] = [];
                 appData.annualPrograms[currentClass].push({ id: Date.now(), name, startWeek, endWeek });
                 document.getElementById('prog-seq-name').value = '';
-                document.getElementById('prog-start-week').value = '';
-                document.getElementById('prog-end-week').value = '';
                 saveToLocalStorage();
                 renderAnnualProgram();
             }
@@ -733,7 +1110,7 @@
             const listContainer = document.getElementById('manager-student-list');
             const students = appData.students[selectedClass] || [];
 
-            if(students.length === 0) {
+            if (students.length === 0) {
                 listContainer.innerHTML = `<p style="font-size:0.8rem; color:var(--text-muted);">Aucun élève dans cette classe.</p>`;
                 return;
             }
@@ -752,8 +1129,8 @@
             const input = document.getElementById('new-session-sport-input');
             const sportName = input.value.trim();
 
-            if(sportName && selectedClass) {
-                if(!appData.classSessionsConfig[selectedClass]) appData.classSessionsConfig[selectedClass] = [];
+            if (sportName && selectedClass) {
+                if (!appData.classSessionsConfig[selectedClass]) appData.classSessionsConfig[selectedClass] = [];
                 const newId = 's_' + Date.now();
                 appData.classSessionsConfig[selectedClass].push({ id: newId, sport: sportName });
                 input.value = '';
@@ -765,7 +1142,7 @@
 
         function removeSessionFromClass(className, sessionId) {
             const sessions = appData.classSessionsConfig[className] || [];
-            if(sessions.length <= 1) {
+            if (sessions.length <= 1) {
                 alert("Il faut conserver au moins un créneau !");
                 return;
             }
@@ -778,7 +1155,7 @@
         function addNewClass() {
             const input = document.getElementById('new-class-input');
             const className = input.value.trim();
-            if(className && !appData.classes.includes(className)) {
+            if (className && !appData.classes.includes(className)) {
                 appData.classes.push(className);
                 appData.students[className] = [];
                 appData.classSessionsConfig[className] = [{ id: 's1', sport: 'EPS Général' }];
@@ -791,7 +1168,7 @@
         }
 
         function removeStudent(className, studentId) {
-            if(confirm("Supprimer cet élève ?")) {
+            if (confirm("Supprimer cet élève ?")) {
                 appData.students[className] = appData.students[className].filter(s => s.id !== studentId);
                 saveToLocalStorage();
                 renderStudentManager();
@@ -810,6 +1187,10 @@
             const data = getStudentWeekData(studentId);
             if (data.incident) {
                 document.getElementById('incident-comment').value = data.incident.comment || '';
+                selectedIncidentTypes = [...(data.incident.types || [])];
+                document.querySelectorAll('#incident-types .chip-opt').forEach(chip => {
+                    if (selectedIncidentTypes.includes(chip.innerText)) chip.classList.add('selected');
+                });
             }
 
             document.getElementById('incident-modal').classList.add('active');
@@ -828,6 +1209,8 @@
             if (!activeStudentForIncident) return;
             const data = getStudentWeekData(activeStudentForIncident);
             const comment = document.getElementById('incident-comment').value;
+
+            pushUndoState(activeStudentForIncident, getStudentName(activeStudentForIncident), "Modification incident");
 
             if (selectedIncidentTypes.length > 0 || comment.trim() !== '') {
                 data.incident = {
@@ -855,42 +1238,49 @@
             const sessions = appData.classSessionsConfig[currentClass] || [];
             const currentSes = sessions.find(s => s.id === currentSessionId);
             const sportName = currentSes ? currentSes.sport : "EPS";
+            const weekLabel = formatWeekRange(currentWeek);
 
-            let report = `=== BILAN ${sportName} - ${currentClass} (Semaine ${currentWeek}) ===\n\n`;
+            let report = `=== BILAN ${sportName} - ${currentClass} (Semaine ${weekLabel}) ===
+
+`;
 
             let incidentsCount = 0;
             let materialCount = 0;
             let absentCount = 0;
-            let lateCount = 0;
+            let noPracticeCount = 0;
 
             students.forEach(s => {
                 const data = getStudentWeekData(s.id);
                 if (data.isAbsent) {
                     absentCount++;
-                    report += `• ${s.name} : ABSENT(E)\n`;
+                    report += `• ${s.name} : ABSENT(E)
+`;
                     return;
                 }
 
                 let issues = [];
-                if (data.isLate) { lateCount++; issues.push("Retard"); }
+                if (data.noPractice) { noPracticeCount++; issues.push("Présent sans pratique"); }
+                if (data.isLate) issues.push("Retard");
                 if (data.noKit) issues.push("Pas de tenue");
-                if (data.noShoes) issues.push("Pas de baskets");
+                if (data.noShoes) issues.push("Oubli chaussures");
                 if (data.noBook) issues.push("Oubli carnet");
 
                 const score = calculateScore(data);
 
                 if (issues.length > 0) {
                     materialCount++;
-                    report += `• ${s.name} : Note ${score}/5 (${issues.join(', ')})\n`;
+                    report += `• ${s.name} : Note ${score}/5 (${issues.join(', ')})
+`;
                 }
 
                 if (data.incident) {
                     incidentsCount++;
-                    report += `⚠️ INCIDENT ${s.name} : ${data.incident.types.join(', ')} - "${data.incident.comment}" (${data.incident.timestamp})\n`;
+                    report += `⚠️ INCIDENT ${s.name} : ${data.incident.types.join(', ')} - "${data.incident.comment}" (${data.incident.timestamp})
+`;
                 }
             });
 
-            if (incidentsCount === 0 && materialCount === 0 && absentCount === 0) {
+            if (incidentsCount === 0 && materialCount === 0 && absentCount === 0 && noPracticeCount === 0) {
                 report += "RAS : Excellent comportement global, ponctualité et effectif complet.";
             }
 
@@ -944,8 +1334,10 @@
                 let totalScore = 0;
                 let weeksRecorded = 0;
                 let totalAbsences = 0;
+                let totalNoPractice = 0;
                 let totalRetards = 0;
-                let totalMaterialOublis = 0;
+                let totalShoesOublis = 0;
+                let totalKitOublis = 0;
                 let totalIncidents = 0;
 
                 Object.keys(appData.weeklyRecords).forEach(w => {
@@ -959,8 +1351,10 @@
                                 } else {
                                     weeksRecorded++;
                                     totalScore += calculateScore(studentData);
+                                    if (studentData.noPractice) totalNoPractice++;
                                     if (studentData.isLate) totalRetards++;
-                                    if (studentData.noKit || studentData.noShoes) totalMaterialOublis++;
+                                    if (studentData.noShoes) totalShoesOublis++;
+                                    if (studentData.noKit) totalKitOublis++;
                                     if (studentData.incident) totalIncidents++;
                                 }
                             }
@@ -971,16 +1365,18 @@
                 const avgScore = weeksRecorded > 0 ? (totalScore / weeksRecorded).toFixed(1) : "N/A";
                 
                 let badge = `<span class="badge badge-success">Régulier</span>`;
-                if (totalIncidents > 0 || totalAbsences >= 3 || avgScore < 3) badge = `<span class="badge badge-danger">Vigilance</span>`;
-                else if (totalMaterialOublis > 1 || totalRetards >= 2) badge = `<span class="badge badge-warning">Avertissement</span>`;
+                if (totalIncidents > 0 || totalAbsences >= 3 || (avgScore !== "N/A" && parseFloat(avgScore) < 3)) badge = `<span class="badge badge-danger">Vigilance</span>`;
+                else if ((totalShoesOublis + totalKitOublis) > 1 || totalRetards >= 2 || totalNoPractice >= 2) badge = `<span class="badge badge-warning">Avertissement</span>`;
 
                 return `
                     <tr>
                         <td><b>${s.name}</b></td>
                         <td>${avgScore} / 5</td>
                         <td style="${totalAbsences > 0 ? 'color:var(--accent-red); font-weight:bold;' : ''}">${totalAbsences}</td>
+                        <td style="${totalNoPractice > 0 ? 'color:#d8b4fe; font-weight:bold;' : ''}">${totalNoPractice}</td>
                         <td style="${totalRetards > 0 ? 'color:var(--accent-orange); font-weight:bold;' : ''}">${totalRetards}</td>
-                        <td>${totalMaterialOublis}</td>
+                        <td style="${totalShoesOublis > 0 ? 'color:#fbbf24; font-weight:bold;' : ''}">${totalShoesOublis}</td>
+                        <td>${totalKitOublis}</td>
                         <td>${totalIncidents}</td>
                         <td>${badge}</td>
                     </tr>
@@ -998,7 +1394,7 @@
                         logsHtml += `
                             <div class="timeline-item">
                                 <div class="timeline-header">
-                                    <span>Semaine ${w} (${log.sport}) - ${log.date}</span>
+                                    <span>Semaine ${formatWeekRange(parseInt(w))} (${log.sport}) - ${log.date}</span>
                                     <span style="color:var(--accent-blue)">${log.climat}</span>
                                 </div>
                                 <div style="font-size:0.85rem; color:var(--text-main);">
@@ -1030,6 +1426,7 @@
 
         function loadDemoData() {
             appData = {
+                schoolStartDate: DEFAULT_START_DATE,
                 classes: ["3e SEGPA", "4e3"],
                 classSessionsConfig: {
                     "3e SEGPA": [
@@ -1056,6 +1453,7 @@
                 sequenceLogs: {}
             };
             saveToLocalStorage();
+            detectCurrentSchoolWeek();
             initWeekDropdown();
             renderClasses();
             renderWeek();
@@ -1072,7 +1470,8 @@
         }
 
         function exportCSV() {
-            let csv = "Classe,Semaine,Créneau/Sport,Elève,Note,Absent,Retard,OubliTenue,Incident\n";
+            let csv = "Classe,Semaine,Créneau/Sport,Elève,Note,Absent,SansPratique,Retard,OubliChaussures,OubliTenue,Incident
+";
             const students = appData.students[currentClass] || [];
 
             Object.keys(appData.weeklyRecords).forEach(w => {
@@ -1082,12 +1481,14 @@
                         const sessions = appData.classSessionsConfig[currentClass] || [];
                         const sesObj = sessions.find(s => s.id === sesId);
                         const sportName = sesObj ? sesObj.sport : sesId;
+                        const weekLabel = formatWeekRange(parseInt(w));
 
                         students.forEach(s => {
                             const data = classWeeks[sesId][s.id];
                             if (data) {
                                 const score = calculateScore(data);
-                                csv += `"${currentClass}",${w},"${sportName}","${s.name}",${score},${data.isAbsent ? 'Oui' : 'Non'},${data.isLate ? 'Oui' : 'Non'},${data.noKit || data.noShoes ? 'Oui' : 'Non'},${data.incident ? 'Oui' : 'Non'}\n`;
+                                csv += `"${currentClass}","${weekLabel}","${sportName}","${s.name}",${score},${data.isAbsent ? 'Oui' : 'Non'},${data.noPractice ? 'Oui' : 'Non'},${data.isLate ? 'Oui' : 'Non'},${data.noShoes ? 'Oui' : 'Non'},${data.noKit ? 'Oui' : 'Non'},${data.incident ? 'Oui' : 'Non'}
+`;
                             }
                         });
                     });
