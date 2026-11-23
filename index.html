@@ -440,8 +440,7 @@
         let selectedIncidentTypes = [];
         let feedbackSelection = { climat: '', moteur: '' };
 
-        // Pile d'annulation (historique des états avant chaque action terrain)
-        let undoStack = [];
+        // Pile d'annulation (historique des états avant chaque action terrain)\n        let undoStack = [];
         let undoToastTimer = null;
 
         let appData = {
@@ -1029,8 +1028,7 @@
                 return;
             }
 
-            const lines = text.split('
-');
+            const lines = text.split(String.fromCharCode(10));
             if (!appData.students[targetClass]) appData.students[targetClass] = [];
 
             let addedCount = 0;
@@ -1240,9 +1238,7 @@
             const sportName = currentSes ? currentSes.sport : "EPS";
             const weekLabel = formatWeekRange(currentWeek);
 
-            let report = `=== BILAN ${sportName} - ${currentClass} (Semaine ${weekLabel}) ===
-
-`;
+            let report = `=== BILAN ${sportName} - ${currentClass} (Semaine ${weekLabel}) ===\n\n`;
 
             let incidentsCount = 0;
             let materialCount = 0;
@@ -1253,8 +1249,7 @@
                 const data = getStudentWeekData(s.id);
                 if (data.isAbsent) {
                     absentCount++;
-                    report += `• ${s.name} : ABSENT(E)
-`;
+                    report += `• ${s.name} : ABSENT(E)\n`;
                     return;
                 }
 
@@ -1269,14 +1264,12 @@
 
                 if (issues.length > 0) {
                     materialCount++;
-                    report += `• ${s.name} : Note ${score}/5 (${issues.join(', ')})
-`;
+                    report += `• ${s.name} : Note ${score}/5 (${issues.join(', ')})\n`;
                 }
 
                 if (data.incident) {
                     incidentsCount++;
-                    report += `⚠️ INCIDENT ${s.name} : ${data.incident.types.join(', ')} - "${data.incident.comment}" (${data.incident.timestamp})
-`;
+                    report += `⚠️ INCIDENT ${s.name} : ${data.incident.types.join(', ')} - "${data.incident.comment}" (${data.incident.timestamp})\n`;
                 }
             });
 
@@ -1470,8 +1463,7 @@
         }
 
         function exportCSV() {
-            let csv = "Classe,Semaine,Créneau/Sport,Elève,Note,Absent,SansPratique,Retard,OubliChaussures,OubliTenue,Incident
-";
+            let csv = "Classe,Semaine,Créneau/Sport,Elève,Note,Absent,SansPratique,Retard,OubliChaussures,OubliTenue,Incident\n";
             const students = appData.students[currentClass] || [];
 
             Object.keys(appData.weeklyRecords).forEach(w => {
@@ -1487,8 +1479,7 @@
                             const data = classWeeks[sesId][s.id];
                             if (data) {
                                 const score = calculateScore(data);
-                                csv += `"${currentClass}","${weekLabel}","${sportName}","${s.name}",${score},${data.isAbsent ? 'Oui' : 'Non'},${data.noPractice ? 'Oui' : 'Non'},${data.isLate ? 'Oui' : 'Non'},${data.noShoes ? 'Oui' : 'Non'},${data.noKit ? 'Oui' : 'Non'},${data.incident ? 'Oui' : 'Non'}
-`;
+                                csv += `"${currentClass}","${weekLabel}","${sportName}","${s.name}",${score},${data.isAbsent ? 'Oui' : 'Non'},${data.noPractice ? 'Oui' : 'Non'},${data.isLate ? 'Oui' : 'Non'},${data.noShoes ? 'Oui' : 'Non'},${data.noKit ? 'Oui' : 'Non'},${data.incident ? 'Oui' : 'Non'}\n";
                             }
                         });
                     });
